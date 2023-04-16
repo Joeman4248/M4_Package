@@ -10,16 +10,21 @@ USE_LR_PARSER
 
 prog
 
-<prog> ::= <stmtList>
+<prog> ::= <stmtList> > .
 
-<stmtList> ::= <stmt> ";" <stmtList>
+<stmtList> ::= <stmt> ";" <stmtList> .
 
-<stmt> ::= <block>  | <declare>     | <assign>
-         | <output> | <conditional> | <iteration>
+<stmt> ::= <block>  
+         | <declare>
+         | <assign>
+         | <output> 
+         | <conditional> 
+         | <iteration>
 
 <block> ::= "{" <stmtList> "}"
 
-<declare> ::= "int" "id" | "bool" "id"
+<declare> ::= "int" "id" 
+            | "bool" "id"
 
 <assign> ::= "id" = <expression>
 
@@ -31,7 +36,8 @@ prog
 <iteration> ::= "while" "(" <expression> ")" <block>
               | "for" "(" <assign> ; <expression> ; <loopIncrement> ")" <block>
 
-<loopIncrement> ::= <assign> | <increment>
+<loopIncrement> ::= <assign> 
+                | <increment>
 
 (* Boolean Expressions *)
 
@@ -62,14 +68,23 @@ prog
                    | <multiplicative> "%" <negation>
                    | <negation>
 
-<negation> ::= "!" <negation> | "~" <negation> | <exponent>
+<negation> ::= "!" <negation> 
+             | "~" <negation> 
+             | <exponent> 
 
-<exponent> ::= <absolute> "^" <exponent> | <absolute>
+<exponent> ::= <absolute> "^" <exponent> 
+             | <absolute> 
 
-<absolute> ::= "abs" "(" <absolute> ")" | <base>
+<absolute> ::= "abs" "(" <absolute> ")" 
+             | <base> 
 
-<base> ::= "(" <expression> ")" | <increment>
-         | "id" | "Boolean" | "integer"
+<base> ::= "(" <expression> ")"  
+         | <increment>
+         | "id" 
+         | "boolean" 
+         | "integer"
 
-<increment> ::= "id" "++" | "++" "id"
-              | "id" "--" | "--" "id"
+<increment> ::= "id" "++" 
+              | "id" "--" 
+              | "++" "id" 
+              | "--" "id" 
