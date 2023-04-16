@@ -8,9 +8,9 @@ USE_LR_PARSER
 
 (* Statements *)
 
-program
+prog
 
-<program> ::= <stmtList>
+<prog> ::= <stmtList>
 
 <stmtList> ::= <stmt> ";" <stmtList>
 
