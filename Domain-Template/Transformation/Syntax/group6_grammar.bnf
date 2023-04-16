@@ -12,12 +12,12 @@ prog
 
 <prog> ::= <stmtList> .
 
-<stmtList> ::= <stmt> ";" <stmtList> .
+<stmtList> ::= <stmt> <stmtList> .
 
 <stmt> ::= <block>  .
-         | <declare> .
-         | <assign> .
-         | <output> .
+         | <declare> ";" .
+         | <assign> ";" .
+         | <output> ";" .
          | <conditional> .
          | <iteration> .
 
