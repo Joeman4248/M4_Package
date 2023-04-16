@@ -28,7 +28,7 @@ prog
 <conditional> ::= "if" "(" <expression> ")" <block>
                 | "if" "(" <expression> ")" <block> "else" <block>
 
-<iteration> ::= "while" "(" <expression> ")"
+<iteration> ::= "while" "(" <expression> ")" <block>
               | "for" "(" <assign> ; <expression> ; <loopIncrement> ")" <block>
 
 <loopIncrement> ::= <assign> | <increment>
