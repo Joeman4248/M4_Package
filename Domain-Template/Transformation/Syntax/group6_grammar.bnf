@@ -14,7 +14,7 @@ prog
 
 <stmtList> ::= <stmt> <stmtList> .
 
-<stmt> ::= <block>  .
+<stmt> ::= <block> .
          | <declare> ";" .
          | <assign> ";" .
          | <output> ";" .
