@@ -1,0 +1,28 @@
+USE_LR_PARSER
+
+
+(*	Grammar for Group 6, Milestone 3
+	Authors: Russell Brogan, Joseph Clarke, Anna Rue, Daniel Zapata *)
+
+(* ======================================================================================================= *)
+
+
+program
+
+<program> ::= <stmtList>
+
+<stmtList> ::= <stmt> ";" <stmtList>
+
+<stmt> ::= <block>  | <declare>     | <assign>
+         | <output> | <conditional> | <iteration>
+
+<block> ::= "{" <stmtList> "}"
+
+<declare> ::= "int" "id" | "bool" "id"
+
+<assign> ::= "id" = <expression>
+
+<output> ::= "print" "(" <expression> ")"
+
+<conditional> ::= "if" "(" <expression> ")" <block>
+                | "if" "(" <expression> ")" <block> else <block>
