@@ -2,7 +2,7 @@ USE_LR_PARSER
 
 
 (*	Grammar for Group 6, Milestone 3
-	Authors: Russell Brogan, Joseph Clarke, Anna Rue, Daniel Zapata *)
+    Authors: Russell Brogan, Joseph Clarke, Anna Rue, Daniel Zapata *)
 
 (* ======================================================================================================= *)
 
@@ -45,17 +45,17 @@ prog
 
 <equality> ::= <equality> "==" <relational>
              | <equality> "!=" <relational>
-			 | <relational>
+             | <relational>
 
 <relational> ::= <relational> "<" <additive>
                | <relational> ">" <additive> 
-			   | <additive>
+               | <additive>
 
 (* Integer Expressions *)
 
 <additive> ::= <additive> "+" <multiplicative>
              | <additive> "-" <multiplicative>
-			 | <multiplicative>
+             | <multiplicative>
 
 <multiplicative> ::= <multiplicative> "*" <negation>
                    | <multiplicative> "/" <negation>
