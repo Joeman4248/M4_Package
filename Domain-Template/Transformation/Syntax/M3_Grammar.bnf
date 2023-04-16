@@ -29,7 +29,7 @@ prog
                 | "if" "(" <expression> ")" <block> "else" <block>
 
 <iteration> ::= "while" "(" <expression> ")"
-"for" "(" <assign> ; <expression> ; <loopIncrement> ")" <block>
+              | "for" "(" <assign> ; <expression> ; <loopIncrement> ")" <block>
 
 <loopIncrement> ::= <assign> | <increment>
 
