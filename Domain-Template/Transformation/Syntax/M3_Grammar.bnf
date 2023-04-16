@@ -35,28 +35,41 @@ prog
 
 (* Boolean Expressions *)
 
-<expression> ::=
+<expression> ::= <disjunction>
 
-<disjunction> ::=
+<disjunction> ::= <disjunction> "||" <conjunction>
+                | <conjunction>
 
-<conjunction> ::=
+<conjunction> ::= <conjunction> "&&" <equality>
+                | <equality>
 
-<equality> ::=
+<equality> ::= <equality> "==" <relational>
+             | <equality> "==" <relational>
+			 | <relational>
 
-<relational> ::=
+<relational> ::= <relational> "<" <additive>
+               | <relational> ">" <additive> 
+			   | <additive>
 
 (* Integer Expressions *)
 
-<additive> ::=
+<additive> ::= <additive> "+" <multiplicative>
+             | <additive> "-" <multiplicative>
+			 | <multiplicative>
 
-<multiplicative> ::=
+<multiplicative> ::= <multiplicative> "*" <negation>
+                   | <multiplicative> "/" <negation>
+                   | <multiplicative> "%" <negation>
+                   | <negation>
 
-<negation> ::=
+<negation> ::= "!" <negation> | "~" <negation> | <exponent>
 
-<exponent> ::=
+<exponent> ::= <absolute> "^" <exponent> | <absolute>
 
-<absolute> ::=
+<absolute> ::= "abs" "(" <absolute> ")" | <base>
 
-<base> ::=
+<base> ::= "(" <expression> ")" | <increment>
+         | "id" | "Boolean" | "integer"
 
-<increment> ::=
+<increment> ::= "id" "++" | "++" "id"
+              | "id" "--" | "--" "id"
