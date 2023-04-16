@@ -6,6 +6,7 @@ USE_LR_PARSER
 
 (* ======================================================================================================= *)
 
+(* Statements *)
 
 program
 
@@ -25,4 +26,37 @@ program
 <output> ::= "print" "(" <expression> ")"
 
 <conditional> ::= "if" "(" <expression> ")" <block>
-                | "if" "(" <expression> ")" <block> else <block>
+                | "if" "(" <expression> ")" <block> "else" <block>
+
+<iteration> ::= "while" "(" <expression> ")"
+"for" "(" <assign> ; <expression> ; <loopIncrement> ")" <block>
+
+<loopIncrement> ::= <assign> | <increment>
+
+(* Boolean Expressions *)
+
+<expression> ::=
+
+<disjunction> ::=
+
+<conjunction> ::=
+
+<equality> ::=
+
+<relational> ::=
+
+(* Integer Expressions *)
+
+<additive> ::=
+
+<multiplicative> ::=
+
+<negation> ::=
+
+<exponent> ::=
+
+<absolute> ::=
+
+<base> ::=
+
+<increment> ::=
