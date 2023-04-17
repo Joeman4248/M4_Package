@@ -1,5 +1,5 @@
 { 
-	int sum = 0; 
+	int sum = 0;
 	int sum2 = 0; 
 	{ 
 		int x; 

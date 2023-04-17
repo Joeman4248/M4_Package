@@ -35,9 +35,9 @@ integer      = 0 | {posDigit}{digit}*;
 
 alpha        = [A-Za-z];
 alphanumeric = [A-Za-z0-9_];
-id			 = {alpha}{alphanumeric}*; 
+id           = {alpha}{alphanumeric}*; 
 
-boolean 	 = "true" | "false"; 
+boolean      = "true" | "false"; 
 
 ws           = [\  \t \n];
 
@@ -58,12 +58,12 @@ comment      = "//" .* ;
 
  .                            => ( error("ignored an unprintable character: " ^ yytext); getNextTokenPos(yytext); lex()  );
 
-"{"			=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
-"}"			=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
-"("			=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
-")"			=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
-";"			=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );		
-"="			=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
+"{"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
+"}"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
+"("		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
+")"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
+";"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );		
+"="		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
 "++"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
 "--"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
 "int"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
@@ -75,18 +75,18 @@ comment      = "//" .* ;
 "print"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
 "&&"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
 "||"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
-"<"			=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
-">"			=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
+"<"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
+">"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
 "=="		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
 "!="		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
-"+"			=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
-"-"			=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
-"*"			=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
-"/"			=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
-"%"			=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
-"!"			=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
-"~"			=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
-"^"			=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
+"+"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
+"-"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
+"*"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
+"/"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
+"%"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
+"!"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
+"~"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
+"^"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
 "abs"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
 
 {id}		=> ( SHELL("id" , yytext, getNextTokenPos(yytext))    );
