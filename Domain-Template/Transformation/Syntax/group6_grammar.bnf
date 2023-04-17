@@ -26,7 +26,7 @@ prog
 <declare> ::= "int" "id" .
             | "bool" "id" .
 
-<assign> ::= "id" = <expression> .
+<assign> ::= "id" "=" <expression> .
 
 <output> ::= "print" "(" <expression> ")" .
 
