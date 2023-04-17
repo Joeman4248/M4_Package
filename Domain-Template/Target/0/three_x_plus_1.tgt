@@ -61,7 +61,7 @@
     print(sum);
     
     if (sum2 == 423 && !(sum != 888)) {
-        if (sum2 + 465 >= sum && sum <= sum2 + 465) {
+        if ((sum2 + 465 > sum || sum2 + 465 == sum) && (sum < sum2 + 465 || sum == sum2 + 465)) {
             if (2^0 < 2 && 2^1 > 2 || 2^3 < 8) {
                 print(1);
             }
@@ -76,5 +76,4 @@
     else {
         print(4);
     }
-
 }

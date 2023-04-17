@@ -67,6 +67,8 @@ comment      = "//" .* ;
 "||"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
 "<"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
 ">"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
+"<="		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
+">="		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
 "=="		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
 "!="		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
 "+"		=> ( SHELL(yytext , yytext, getNextTokenPos(yytext))  );
