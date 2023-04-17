@@ -1,10 +1,9 @@
-(*#line 31.10 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec"*)functor Target_LexFn(val getNextTokenPos : string -> {line: word, column: word})(*#line 1.1 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec.sml"*)
+(*#line 30.10 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec"*)functor Target_LexFn(val getNextTokenPos : string -> {line: word, column: word})(*#line 1.1 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec.sml"*)
 =
    struct
     structure UserDeclarations =
       struct
-(*#line 1.1 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec"*)(* ============================================================================================== *) 
-datatype lexresult	= SHELL of string * string * {line: word, column: word};
+(*#line 1.1 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec"*)datatype lexresult	= SHELL of string * string * {line: word, column: word};
 val error 			= fn x => TextIO.output(TextIO.stdOut,x ^ "\n")
 val eof 			= fn () => SHELL("","eof",getNextTokenPos(""))
 (* ============================================================================================== *)
@@ -12,27 +11,27 @@ val eof 			= fn () => SHELL("","eof",getNextTokenPos(""))
 (* assumes that ">" does not occur as part of a nonterminal symbol *)
 fun generateSchemaTokenName( yytext ) =
     let
-		fun split(x, []   ) =  raise General.Fail("an_error")
-		  | split(x, y::ys) = if x=y then ys else split(x,ys);
-													
-		fun splitFirst(symbol,[])    = 	[] (* symbol was not in the input list *)
-		  | splitFirst(symbol,x::xs) = 	if x = symbol 
-						then (* found split point *)
-							[]
-						else (* keep looking      *)
-							x::splitFirst(symbol,xs);
-																		
+        fun split(x, []   ) =  raise General.Fail("an_error")
+          | split(x, y::ys) = if x=y then ys else split(x,ys);
+                                                    
+        fun splitFirst(symbol,[])    = 	[] (* symbol was not in the input list *)
+          | splitFirst(symbol,x::xs) = 	if x = symbol 
+                        then (* found split point *)
+                            []
+                        else (* keep looking      *)
+                            x::splitFirst(symbol,xs);
+                                                                        
         val s0   = explode(yytext);
         val s1   = split(#"<",s0);
         val s2   = splitFirst(#">",s1);  
     in
         implode(explode("!#schema_variable_") @ s2)        
     end;
-	
+    
 (* ------------------------------------------------------------------ *)
 
 (* ============================================================================================== *)
-(*#line 35.1 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec.sml"*)
+(*#line 34.1 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec.sml"*)
 end (* end of user routines *)
 exception LexError (* raised if illegal leaf action tried *)
 structure Internal =
@@ -256,19 +255,19 @@ let fun continue() = lex() in
 
 			(* Application actions *)
 
-  12 => let val yytext=yymktext() in (*#line 46.35 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec"*) SHELL("id"        , yytext,     getNextTokenPos(yytext))    (*#line 259.1 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec.sml"*)
+  12 => let val yytext=yymktext() in (*#line 52.35 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec"*) SHELL("id"        , yytext,     getNextTokenPos(yytext))    (*#line 258.1 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec.sml"*)
  end
-| 2 => let val yytext=yymktext() in (*#line 42.18 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec"*) getNextTokenPos(yytext); lex()  (*#line 261.1 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec.sml"*)
+| 2 => let val yytext=yymktext() in (*#line 48.18 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec"*) getNextTokenPos(yytext); lex()  (*#line 260.1 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec.sml"*)
  end
-| 20 => let val yytext=yymktext() in (*#line 50.35 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec"*) SHELL(generateSchemaTokenName(yytext), yytext, getNextTokenPos(yytext))    (*#line 263.1 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec.sml"*)
+| 20 => let val yytext=yymktext() in (*#line 56.35 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec"*) SHELL(generateSchemaTokenName(yytext), yytext, getNextTokenPos(yytext))    (*#line 262.1 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec.sml"*)
  end
-| 24 => let val yytext=yymktext() in (*#line 51.35 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec"*) SHELL("" , yytext, getNextTokenPos(yytext))    (*#line 265.1 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec.sml"*)
+| 24 => let val yytext=yymktext() in (*#line 57.35 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec"*) SHELL("" , yytext, getNextTokenPos(yytext))    (*#line 264.1 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec.sml"*)
  end
-| 26 => let val yytext=yymktext() in (*#line 53.35 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec"*) error("ignored an unprintable character: " ^ yytext); getNextTokenPos(yytext); lex()  (*#line 267.1 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec.sml"*)
+| 26 => let val yytext=yymktext() in (*#line 59.35 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec"*) error("ignored an unprintable character: " ^ yytext); getNextTokenPos(yytext); lex()  (*#line 266.1 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec.sml"*)
  end
-| 6 => let val yytext=yymktext() in (*#line 43.18 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec"*) getNextTokenPos(yytext); lex()  (*#line 269.1 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec.sml"*)
+| 6 => let val yytext=yymktext() in (*#line 49.18 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec"*) getNextTokenPos(yytext); lex()  (*#line 268.1 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec.sml"*)
  end
-| 9 => let val yytext=yymktext() in (*#line 45.35 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec"*) SHELL("integer"   , yytext,     getNextTokenPos(yytext))    (*#line 271.1 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec.sml"*)
+| 9 => let val yytext=yymktext() in (*#line 51.35 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec"*) SHELL("integer"   , yytext,     getNextTokenPos(yytext))    (*#line 270.1 "C:\Users\Joseph\Coding\CSCI4220\Group_Project\Milestone_03\M3_Package\Domain-Template\Transformation\bin\target_tokens.spec.sml"*)
  end
 | _ => raise Internal.LexerError
 
