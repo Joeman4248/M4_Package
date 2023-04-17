@@ -38,6 +38,10 @@ ws           = [\  \t \n];
 schema_id    = "<" {alpha}{alphanumeric}* ">_" {alphanumeric}+;
 comment      = "//" .* ;
 
+integer		 = 
+boolean		 = 
+id			 = 
+
 %%
 {ws}+        => ( getNextTokenPos(yytext); lex()  );
 {comment}    => ( getNextTokenPos(yytext); lex()  );
