@@ -1,7 +1,7 @@
 USE_LR_PARSER
 
 
-(*	Grammar for Group 6, Milestone 3
+(*  Grammar for Group 6, Milestone 3
     Authors: Russell Brogan, Joseph Clarke, Anna Rue, Daniel Zapata *)
 
 (* ======================================================================================================= *)
@@ -12,21 +12,25 @@ prog
 
 <prog> ::= <stmtList> .
 
-<stmtList> ::= <stmt> <stmtList> .
+<stmtList> ::= <stmt> <stmtList> | .
 
 <stmt> ::= <block> 
          | <declare> ";" 
          | <assign> ";" 
+         | <initialize> ";"
          | <output> ";" 
          | <conditional> 
          | <iteration> .
 
 <block> ::= "{" <stmtList> "}" .
 
-<declare> ::= "int" "id" 
-            | "bool" "id" .
+<declare> ::= "int" id
+            | "bool" id .
 
-<assign> ::= "id" "=" <expression> .
+<assign> ::= id "=" <expression> .
+
+<initialize> ::= "int" id "=" <expression>
+               | "bool" id "=" <expression>.
 
 <output> ::= "print" "(" <expression> ")" .
 
@@ -34,10 +38,11 @@ prog
                 | "if" "(" <expression> ")" <block> "else" <block> .
 
 <iteration> ::= "while" "(" <expression> ")" <block> 
-              | "for" "(" <assign> ";" <expression> ";" <loopIncrement> ")" <block> .
+              | "for" "(" <forInit> ";" <expression> ";" <loopIncrement> ")" <block> .
 
-<loopIncrement> ::= <assign> 
-                | <increment> .
+<forInit> ::= <assign> | <initialize> .
+
+<loopIncrement> ::= <assign> | <increment> .
 
 (* Boolean Expressions *)
 
@@ -55,6 +60,8 @@ prog
 
 <relational> ::= <relational> "<" <additive> 
                | <relational> ">" <additive> 
+               | <relational> "<=" <additive> 
+               | <relational> ">=" <additive> 
                | <additive> .
 
 (* Integer Expressions *)
@@ -75,13 +82,13 @@ prog
 <exponent> ::= <absolute> "^" <exponent> 
              | <absolute> .
 
-<absolute> ::= "abs" "(" <absolute> ")" 
+<absolute> ::= "abs" "(" <expression> ")" 
              | <base> .
 
 <base> ::= "(" <expression> ")" | <increment> 
-         | "id" | "boolean" | "integer" .
+         | id | boolean | integer .
 
-<increment> ::= "id" "++" 
-              | "id" "--" 
-              | "++" "id" 
-              | "--" "id" .
+<increment> ::= id "++" 
+              | id "--" 
+              | "++" id 
+              | "--" id .

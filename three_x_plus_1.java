@@ -18,21 +18,20 @@ class three_x_plus_1
 
     public static void main( String[] args) {
         int sum  = 0;
-		  int sum2 = 0;
-        
-		  {
-				int x;
-				
-				for (int i = 1; i < 32; i++) {
-					x = i;
-					while (x != 1) {
-						for (int j = 1; j < 3; j++){
-							if (x % 2 == 0) x = x / 2;
-							else x = 3*x + 1;
-						}
-						sum = sum + 3;
-					}
-				}
+		int sum2 = 0;
+  		{
+                            int x;
+
+                            for (int i = 1; i < 32; i++) {
+                                    x = i;
+                                    while (x != 1) {
+                                            for (int j = 1; j < 3; j++){
+                                                    if (x % 2 == 0) x = x / 2;
+                                                    else x = 3*x + 1;
+                                            }
+                                            sum = sum + 3;
+                                    }
+                            }
 		}
 
         
@@ -69,7 +68,7 @@ class three_x_plus_1
 			System.out.println("\nsum2 = " + sum2);
 		}
 		System.out.println("\nsum = " + sum);
-
+		
 
 		if (sum2 == 423 && !(sum != 888))
    		if (sum2 + 465 >= sum && sum <= sum2 + 465) 
