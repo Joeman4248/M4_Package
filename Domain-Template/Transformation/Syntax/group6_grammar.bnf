@@ -24,13 +24,10 @@ prog
 
 <block> ::= "{" <stmtList> "}" .
 
-<declare> ::= "int" id
+<declare> ::= "int"  id
             | "bool" id .
 
 <assign> ::= id "=" <expression> .
-
-<initialize> ::= "int" id "=" <expression>
-               | "bool" id "=" <expression>.
 
 <output> ::= "print" "(" <expression> ")" .
 
