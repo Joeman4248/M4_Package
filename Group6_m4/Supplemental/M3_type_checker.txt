@@ -12,9 +12,9 @@ typeCheck([[ iteration   ]], m0) = typeCheck(iteration, m0)
 
 typeCheck([[ { stmtList } ]], m0) = 
       let
-      val m1 = typeCheck(stmtList, m0)
+            val m1 = typeCheck(stmtList, m0)
       in
-      m0
+            m0
       end
 
 typeCheck([[ int  id ]], m0) = updateEnv(id, INT,  new(), m0)
@@ -26,9 +26,9 @@ typeCheck([[ id = expression ]], m0) =
             val t2 = getType(accessEnv(id, m0))
       in
             if t1 = t2 then 
-            m0
+                  m0
             else 
-            raise model_error
+                  raise model_error
       end
 
 typeCheck([[ print( expression ) ]], m0) = 
@@ -36,9 +36,9 @@ typeCheck([[ print( expression ) ]], m0) =
             val t1 = typeOf(expression, m0)
       in
             if t1 <> ERROR then
-            m0
+                  m0
             else
-            raise model_error
+                  raise model_error
       end
 
 typeCheck([[ if (expression) block ]], m0) = 
