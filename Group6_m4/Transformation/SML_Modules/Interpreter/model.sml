@@ -44,10 +44,10 @@ fun getLoc ( id, t, loc ) = loc
 fun getType( id, t, loc ) = t     
 
 (* accessEnv: identifier * model → environment *)
-fun accessEnv( id1, ([], _, _) ) = raise Fail("ERROR:" ^ id ^ "is undeclared in this scope!")
-  | accessEnv( id1, ((id2, t, loc)::env, loc, store)) = 
+fun accessEnv( id1, ([], _, _) ) = raise Fail("ERROR:" ^ id1 ^ "is undeclared in this scope!")
+  | accessEnv( id1, ((id2, t2, loc2)::env, loc, store)) = 
       if (id1 = id2) then
-         (id2, t, loc)
+         (id2, t2, loc2)
       else
          accessEnv(id1, (env, loc, store))
 
@@ -70,10 +70,10 @@ fun updateEnv( id1, t1, (env, loc, store) ) =
                if (id1 = id2) then
                   raise Fail("ERROR: " ^ id1 ^ " is already declared in this scope!")
                else
-                  (id2, t2, loc2)::add_env(env2)
+                  (id2, t2, loc2)::new_env(env2)
       in
          (new_env(env), loc + 1, store)
-      end
+      end  
 
 (* updateStore: location * type * model → model 
  *    if the given location is present in the store, update the store,
@@ -89,7 +89,6 @@ fun updateStore( loc1, v1, (env, loc, store) ) =
       in
          (env, loc, new_store(store))
       end
-
 
 
 (* =========================================================================================================== *)
