@@ -111,22 +111,94 @@ fun M( itree( inode("stmtList",_), [ itree(inode("",_), []) ] ), m ) = m
 (* ----- Boolean Expressions ----- *)
 
 (* <expression> ::= <disjunction> *)
+fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
 
 (* <disjunction> ::= <disjunction> "||" <conjunction> 
                    | <conjunction> *)
+fun E( itree(inode("disjunction",_),
+        [
+            disjunction,
+            itree(inode("||",_), [] ),
+            conjunction
+        ]
+    ), m) = let
+                val (term1, m1) = E(disjunction, m)
+            in
+                if term1 then
+                    (term1, m1)
+                else
+                    E(conjunction, m1)
+            end
+            
+  | E( itree(inode("disjunction",_), [ conjunction ]), m ) = E(conjunction, m)
+
 
 (* <conjunction> ::= <conjunction> "&&" <equality> 
                    | <equality> *)
+fun E( itree(inode("conjunction",_),
+        [
+            conjunction,
+            itree(inode("&&",_), [] ),
+            equality
+        ]
+    ), m) = let
+                val (term1, m1) = E(conjunction, m)
+            in
+                if not term1 then
+                    (term1, m1)
+                else
+                    E(equality, m1)
+            end
+            
+  | E( itree(inode("conjunction",_), [ equality ]), m ) = E(equality, m)
 
 (* <equality> ::= <equality> "==" <relational> 
                 | <equality> "!=" <relational> 
                 | <relational> *)
+fun E( itree(inode("equality"_), 
+        [
+            equality,
+            itree(inode("==",_), []),
+            relational
+        ]
+    ), m) = let
+                val (term1, m1) = E(equality, m)
+                val (term2, m2) = E(relational, m1)
+            in
+                (term1 <> term2, m2)
+            end
+
+            
+  | E( itree(inode("equality"_), 
+        [
+            equality,
+            itree(inode("!=",_), []),
+            relational
+        ]
+    ), m) = let
+                val (term1, m1) = E(equality, m)
+                val (term2, m2) = E(relational, m1)
+            in
+                (term1 <> term2, m2)
+            end
 
 (* <relational> ::= <relational> "<" <additive> 
                   | <relational> ">" <additive> 
                   | <relational> "<=" <additive> 
                   | <relational> ">=" <additive> 
                   | <additive> *)
+fun E( itree(inode("relational"_), 
+        [
+            relational,
+            itree(inode("<"_), []),
+            additive
+        ]
+    ), m) = let
+                val (term1, m1) = E(relational, m)
+                val (term2, m2) = E(additive, m1)
+            in
+                (term1 < term2, m2)
+            end
 
 (* ----- Integer Expressions ----- *)
 

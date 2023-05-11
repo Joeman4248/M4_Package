@@ -161,6 +161,22 @@ E'([[ relational > additive ]], m0) =
         ((term1 > term2), m2) 
     end 
  
+E'([[ relational <= additive ]], m0) =  
+    let 
+        val (term1, m1) = E'(relational, m0) 
+        val (term2, m2) = E'(additive, m1) 
+    in 
+        ((term1 <= term2), m2) 
+    end 
+    
+E'([[ relational >= additive ]], m0) =  
+    let 
+        val (term1, m1) = E'(relational, m0) 
+        val (term2, m2) = E'(additive, m1) 
+    in 
+        ((term1 >= term2), m2) 
+    end 
+ 
 E'([[ additive ]], m0) = E'(additive, m0) 
 
 E'([[ additive + multiplicative ]], m0) = 
