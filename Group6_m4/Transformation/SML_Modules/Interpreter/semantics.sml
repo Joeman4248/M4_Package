@@ -92,6 +92,8 @@ fun M( itree( inode("stmtList",_), [ itree(inode("",_), []) ] ), m ) = m
 (* <declare> ::= "int"  id *)
 (* <declare> ::= "bool" id *)
 
+(* <block> ::= "{" <stmtList> "}" *)
+
 (* <assign> ::= id "=" <expression> *)
 
 (* <output> ::= "print" "(" <expression> ")" *)
