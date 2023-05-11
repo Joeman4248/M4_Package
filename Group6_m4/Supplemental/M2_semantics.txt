@@ -103,7 +103,7 @@ M([[ increment ]], m0) =
 
 E'([[ disjunction ]], m0) = E'(disjunction, m0) 
 
-E'([[ disjunction || conjunction ]]), m0) =  
+E'(([[ disjunction || conjunction ]]), m0) =  
     let 
         val (term1, m1) = E'(disjunction, m0) 
     in 
