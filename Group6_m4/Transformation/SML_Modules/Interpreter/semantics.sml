@@ -63,26 +63,25 @@ open CONCRETE_REPRESENTATION;
             (3) the second child is a semi-colon   
 *)
 
-fun M(  itree(inode("prog",_), 
-                [ 
-                    stmt_list
-                ] 
-             ), 
-        m
-    ) = m
+(* ---------- Statements ---------- *)
+fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
         
-  | M(  itree(inode(x_root,_), children),_) = raise General.Fail("\n\nIn M root = " ^ x_root ^ "\n\n")
+  | M( itree(inode(x_root,_), children),_) = raise General.Fail("\n\nIn M root = " ^ x_root ^ "\n\n")
   
   | M _ = raise Fail("error in Semantics.M - this should never occur")
+
+
+fun M( itree( inode("stmtList",_), [ itree(inode("",_), []) ] ), m ) = m
+  | M( itree( inode("stmtList",_), 
+        [ 
+            stmt, 
+            stmtList 
+        ]
+    ), m ) = M( stmtList, M(stmt, m) )
+
+
+
 
 (* =========================================================================================================== *)
 end (* struct *)
 (* =========================================================================================================== *)
-
-
-
-
-
-
-
-
