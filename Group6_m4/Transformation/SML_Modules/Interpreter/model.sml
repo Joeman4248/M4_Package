@@ -38,10 +38,10 @@ type store = (loc * denotable_value) list    (* (location, value) *)
 val initialModel = ( []:env, 0:loc, []:store )
 
 (* getLoc: environment → location *)
-fun getLoc ( id, t, loc ) = loc   
+fun getLoc (id, t, loc) = loc   
 
 (* getType: environment → type *)
-fun getType( id, t, loc ) = t     
+fun getType(id, t, loc) = t     
 
 (* accessEnv: identifier * model → environment *)
 fun accessEnv( id1, ([], _, _) ) = raise Fail("ERROR:" ^ id1 ^ "is undeclared in this scope!")
@@ -61,7 +61,7 @@ fun accessStore( _, (_, _, []) ) = raise Fail("ERROR: uninitialized variable!")
 
 (* updateEnv: id * type * model → model
  *    Instead of new(), we will use the address counter, 
- *    'loc' in the model to place a new environment tuple (id, type, loc) *)
+ *    'loc' in the model to place a new environment entry *)
 fun updateEnv( id1, t1, (env, loc, store) ) = 
       let 
          fun new_env([]) = [(id1, t1, loc)]  (* if new id is not found in current env, 
@@ -73,7 +73,7 @@ fun updateEnv( id1, t1, (env, loc, store) ) =
                   (id2, t2, loc2)::new_env(env2)
       in
          (new_env(env), loc + 1, store)
-      end  
+      end
 
 (* updateStore: location * type * model → model 
  *    if the given location is present in the store, update the store,
