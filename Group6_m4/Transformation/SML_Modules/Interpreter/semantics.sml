@@ -89,10 +89,9 @@ fun M( itree( inode("stmtList",_), [ itree(inode("",_), []) ] ), m ) = m
 (* <stmt> ::= <conditional>  *)
 (* <stmt> ::= <iteration>  *)
 
+
 (* <declare> ::= "int"  id *)
 (* <declare> ::= "bool" id *)
-
-(* <block> ::= "{" <stmtList> "}" *)
 
 (* <assign> ::= id "=" <expression> *)
 
@@ -106,54 +105,57 @@ fun M( itree( inode("stmtList",_), [ itree(inode("",_), []) ] ), m ) = m
 
 (* <loopIncrement> ::= <assign> | <increment> *)
 
-(* ---------- Boolean Expressions ---------- *)
+(* ---------- Expressions ---------- *)
+
+
+(* ----- Boolean Expressions ----- *)
 
 (* <expression> ::= <disjunction> *)
 
-(* <disjunction> ::= <disjunction> "||" <conjunction>  *)
-(* <disjunction> ::= <conjunction> *)
+(* <disjunction> ::= <disjunction> "||" <conjunction> 
+                   | <conjunction> *)
 
-(* <conjunction> ::= <conjunction> "&&" <equality>  *)
-(* <conjunction> ::= <equality> *)
+(* <conjunction> ::= <conjunction> "&&" <equality> 
+                   | <equality> *)
 
-(* <equality> ::= <equality> "==" <relational>  *)
-(* <equality> ::= <equality> "!=" <relational>  *)
-(* <equality> ::= <relational> *)
+(* <equality> ::= <equality> "==" <relational> 
+                | <equality> "!=" <relational> 
+                | <relational> *)
 
-(* <relational> ::= <relational> "<" <additive>  *)
-(* <relational> ::= <relational> ">" <additive>  *)
-(* <relational> ::= <relational> "<=" <additive>  *)
-(* <relational> ::= <relational> ">=" <additive>  *)
-(* <relational> ::= <additive> *)
+(* <relational> ::= <relational> "<" <additive> 
+                  | <relational> ">" <additive> 
+                  | <relational> "<=" <additive> 
+                  | <relational> ">=" <additive> 
+                  | <additive> *)
 
-(* ---------- Integer Expressions ---------- *)
+(* ----- Integer Expressions ----- *)
 
-(* <additive> ::= <additive> "+" <multiplicative>  *)
-(* <additive> ::= <additive> "-" <multiplicative>  *)
-(* <additive> ::= <multiplicative> *)
+(* <additive> ::= <additive> "+" <multiplicative> 
+                | <additive> "-" <multiplicative> 
+                | <multiplicative> *)
 
-(* <multiplicative> ::= <multiplicative> "*" <negation>  *)
-(* <multiplicative> ::= <multiplicative> "/" <negation>  *)
-(* <multiplicative> ::= <multiplicative> "%" <negation>  *)
-(* <multiplicative> ::= <negation> *)
+(* <multiplicative> ::= <multiplicative> "*" <negation> 
+                      | <multiplicative> "/" <negation> 
+                      | <multiplicative> "%" <negation> 
+                      | <negation> *)
 
-(* <negation> ::= "!" <negation>  *)
-(* <negation> ::= "~" <negation>  *)
-(* <negation> ::=  <exponent> *)
+(* <negation> ::= "!" <negation> 
+                | "~" <negation> 
+                | <exponent> *)
 
-(* <exponent> ::= <absolute> "^" <exponent>  *)
-(* <exponent> ::= <absolute> *)
+(* <exponent> ::= <absolute> "^" <exponent> 
+                | <absolute> *)
 
-(* <absolute> ::= "abs" "(" <expression> ")"  *)
-(* <absolute> ::= <base> *)
+(* <absolute> ::= "abs" "(" <expression> ")" 
+                | <base> *)
 
-(* <base> ::= "(" <expression> ")" | <increment>  *)
-(* <base> ::= id | boolean | integer *)
+(* <base> ::= "(" <expression> ")" | <increment> 
+            | id | boolean | integer *)
 
-(* <increment> ::= id "++"  *)
-(* <increment> ::= id "--"  *)
-(* <increment> ::= "++" id  *)
-(* <increment> ::= "--" id  *)
+(* <increment> ::= id "++" 
+                 | id "--" 
+                 | "++" id 
+                 | "--" id *)
 
 (* =========================================================================================================== *)
 end (* struct *)
