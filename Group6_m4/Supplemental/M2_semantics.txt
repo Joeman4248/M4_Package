@@ -1,0 +1,298 @@
+M([[ stmtList ]], m0) = M(stmtList, m0) 
+
+M([[ stmt; stmtList ]], m0) = M(stmtList , M(stmt, m0)) 
+
+M([[ ]], m0) = m0 
+
+M([[ block       ]], m0) = M(block, m0) 
+M([[ declare     ]], m0) = M(declare, m0) 
+M([[ assign      ]], m0) = M(assign, m0) 
+M([[ output      ]], m0) = M(output, m0) 
+M([[ conditional ]], m0) = M(conditional, m0) 
+M([[ iteration   ]], m0) = M(iteration, m0) 
+
+M([[ { stmtList } ]], (env0, s0)) =  
+    let 
+        val (env1, s1) = M(stmtList, (env0, s0)) 
+    in 
+        (env0, s1) 
+    end 
+
+M([[ int  id ]], m0) = updateEnv(id, int,  new(), m0) 
+
+M([[ bool id ]], m0) = updateEnv(id, bool, new(), m0) 
+
+M([[ id = expression ]], m0) =  
+    let 
+        val (v1, m1) = E'(expression, m0) 
+    in 
+        updateStore(getLoc(accessEnv(id, m1)), v1, m1) 
+    end 
+
+M([[ print(expression) ]]) = 
+    let 
+        val (v1, m1) = E'(expression, m0) 
+    in 
+        print(v1) 
+        m1 
+    end 
+
+M([[ if (expression) block ]], m0) =  
+    let 
+        val (cond, m1) = E'(expression, m0) 
+    in 
+        if cond then  
+            M(block, m1) 
+        else  
+            m1 
+    end 
+
+M([[ if (expression) block1 else block2 ]], m0) =  
+    let 
+        val (cond, m1) = E'(expression, m0) 
+    in 
+        if cond then  
+            M(block1, m1) 
+        else  
+            M(block2, m1) 
+    end 
+
+M([[ while (expression) block ]], m0) =  
+    let 
+        val (cond, m1) = E'(expression, m0) 
+    in 
+        if cond then 
+            M([[ while (expression) block ]], M(block, m1)) 
+        else 
+            m1 
+    end 
+
+ 
+
+M([[ for (assign; expression; loopIncrement) block ]], m0) =  
+    let 
+        val m1 = M(assign, m0) 
+    in 
+        N(expression, block, loopIncrement, m1) 
+    end 
+
+N(expression, block, loopIncrement, m0) = 
+    let 
+        val (cond, m1) = E'(expression, m0) 
+    in 
+        if cond then 
+            let 
+                val m2 = M(block, m1) 
+                val m3 = M(loopIncrement, m2) 
+            in 
+                N(expression, block, loopIncrement, m3) 
+            end 
+        else 
+            m1 
+    end 
+
+M([[ loopIncrement ]], m0) = M(loopIncrement, m0) 
+
+M([[ increment ]], m0) =  
+    let 
+        val (v1, m1) = E'(increment, m0) 
+    in 
+        m1 
+    end 
+
+
+E'([[ disjunction ]], m0) = E'(disjunction, m0) 
+
+E'([[ disjunction || conjunction ]]), m0) =  
+    let 
+        val (term1, m1) = E'(disjunction, m0) 
+    in 
+        if term1 then 
+            (term1, m1) 
+        else 
+            E'(conjunction, m1) 
+    end 
+
+E'([[ conjunction ]], m0) = E'(conjunction, m0) 
+
+E'([[ conjunction && equality ]], m0) =  
+    let 
+        val (term1, m1) = E'(conjunction, m0) 
+    in 
+        if not term1 then 
+            (term1, m1) 
+    else 
+            E'(equality, m1) 
+    end 
+
+E'([[ equality ]], m0) = E'(equality, m0) 
+
+E'([[ equality == relational ]], m0) = 
+    let 
+        val (term1, m1) = E'(equality, m0) 
+        val (term2, m2) = E'(relational, m1) 
+    in 
+        ((term1 = term2), m2) 
+    end 
+ 
+E'([[ equality != relational ]], m0) = 
+    let 
+        val (term1, m1) = E'(equality, m0) 
+        val (term2, m2) = E'(relational, m1) 
+    in 
+        ((term1 <> term2), m2) 
+    end 
+ 
+E'([[ relational ]], m0) = E'(relational, m0) 
+ 
+E'([[ relational < additive ]], m0) =  
+    let 
+        val (term1, m1) = E'(relational, m0) 
+        val (term2, m2) = E'(additive, m1) 
+    in 
+        ((term1 < term2), m2) 
+    end 
+
+E'([[ relational > additive ]], m0) =  
+    let 
+        val (term1, m1) = E'(relational, m0) 
+        val (term2, m2) = E'(additive, m1) 
+    in 
+        ((term1 > term2), m2) 
+    end 
+ 
+E'([[ additive ]], m0) = E'(additive, m0) 
+
+E'([[ additive + multiplicative ]], m0) = 
+    let 
+        val (term1, m1) = E'(additive, m0) 
+        val (term2, m2) = E'(multiplicative, m1) 
+    in 
+        ((term1 + term2), m2) 
+    end 
+
+E'([[ additive - multiplicative ]], m0) = 
+    let 
+        val (term1, m1) = E'(additive, m0) 
+        val (term2, m2) = E'(multiplicative, m1) 
+    in 
+        ((term1 - term2), m2) 
+    end 
+
+E'([[ multiplicative ]], m0) = E'(multiplicative, m0) 
+
+E'([[ multiplicative * negation ]], m0) = 
+    let 
+        val (term1, m1) = E'(multiplicative, m0) 
+        val (term2, m2) = E'(negation, m1) 
+    in 
+        ((term1 * term2), m2) 
+    end 
+
+E'([[ multiplicative / negation ]], m0) = 
+    let 
+        val (term1, m1) = E'(multiplicative, m0) 
+        val (term2, m2) = E'(negation, m1) 
+    in 
+        ((term1 div term2), m2) 
+    end 
+
+E'([[ multiplicative % negation ]], m0) = 
+    let 
+        val (term1, m1) = E'(multiplicative, m0) 
+        val (term2, m2) = E'(negation, m1) 
+    in 
+        ((term1 mod term2), m2) 
+    end 
+
+E'([[ negation ]], m0) = E'(negation, m0) 
+	let
+        val (term1, m1) = E'(negation, m0) 
+    in 
+        (not term1, m1) 
+    end 
+
+E'([[ ~ negation ]], m0) =  
+    let 
+        val (term1, m1) = E'(negation, m0) 
+    in 
+        (~term1, m1) 
+    end 
+
+E'([[ exponent ]], m0) = E'(exponent, m0) 
+ 
+E'([[ absolute ^ exponent ]], m0) =  
+    let 
+        val (term1, m1) = E'(absolute, m0) 
+        val (term2, m2) = E'(exponent, m1) 
+    in 
+        (exp(term1, term2), m2) 
+    end 
+
+E'([[ absolute ]], m0) = E'(absolute, m0) 
+
+E'([[ abs( absolute ) ]]), m0) = 
+    let 
+        val (term1, m1) = E'(absolute, m0) 
+    in 
+        if term1 < 0 then 
+            (~term1, m1) 
+        else 
+            (term1, m1) 
+    end 
+
+E'([[ base ]], m0) = E'(base, m0) 
+
+E'([[ increment ]], m0)      = E'(increment, m0) 
+
+E'([[ ( expression ) ]], m0) = E'(expression, m0) 
+
+E'([[ id ]], m0) = 
+    let 
+        var loc = getLoc(accessEnv(id, m0)) 
+        var v1 = accessStore(loc, m0) 
+    in 
+        (v1, m0) 
+    end 
+
+E'([[ integer ]], m0) = (integer, m0) 
+
+E'([[ boolean ]], m0) = (boolean, m0) 
+
+E'([[ id ++ ]], m0) =  
+    let 
+        var loc = getLoc(accessEnv(id, m0)) 
+        var v1 = accessStore(loc, m0) 
+        var v2 = v1 + 1 
+    in 
+        (v1, updateStore(loc, v2, m0)) 
+    end 
+
+E'([[ id -- ]], m0) =  
+    let 
+        var loc = getLoc(accessEnv(id, m0)) 
+        var v1 = accessStore(loc, m0) 
+        var v2 = v1 - 1 
+    in 
+        (v1, updateStore(loc, v2, m0)) 
+    end 
+
+E'([[ ++ id ]], m0) =  
+    let 
+        var loc = getLoc(accessEnv(id, m0)) 
+        var v1 = accessStore(loc, m0) 
+        var v2 = v1 + 1 
+    in 
+        (v2, updateStore(loc, v2, m0)) 
+    end 
+
+E'([[ -- id ]], m0) =  
+    let 
+        var loc = getLoc(accessEnv(id, m0)) 
+        var v1 = accessStore(loc, m0) 
+        var v2 = v1 - 1 
+    in 
+        (v2, updateStore(loc, v2, m0)) 
+    end 
+
+ 

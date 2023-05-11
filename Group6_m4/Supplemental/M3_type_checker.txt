@@ -1,0 +1,329 @@
+typeCheck([[ stmtList ]], m0) = typeCheck(stmtList, m0)
+
+typeCheck([[ stmt ; stmtList ]], m0) = typeCheck(stmtList, typeCheck(stmt, m0))
+typeCheck([[ ]], m0) = m0
+
+typeCheck([[ block       ]], m0) = typeCheck(block, m0)
+typeCheck([[ declare     ]], m0) = typeCheck(declare, m0)
+typeCheck([[ assign      ]], m0) = typeCheck(assign, m0)
+typeCheck([[ output      ]], m0) = typeCheck(output, m0)
+typeCheck([[ conditional ]], m0) = typeCheck(conditional, m0)
+typeCheck([[ iteration   ]], m0) = typeCheck(iteration, m0)
+
+typeCheck([[ { stmtList } ]], m0) = 
+      let
+      val m1 = typeCheck(stmtList, m0)
+      in
+      m0
+      end
+
+typeCheck([[ int  id ]], m0) = updateEnv(id, INT,  new(), m0)
+typeCheck([[ bool id ]], m0) = updateEnv(id, BOOl, new(), m0)
+
+typeCheck([[ id = expression ]], m0) = 
+      let
+            val t1 = typeOf(expression, m0)
+            val t2 = getType(accessEnv(id, m0))
+      in
+            if t1 = t2 then 
+            m0
+            else 
+            raise model_error
+      end
+
+typeCheck([[ print( expression ) ]], m0) = 
+      let
+            val t1 = typeOf(expression, m0)
+      in
+            if t1 <> ERROR then
+            m0
+            else
+            raise model_error
+      end
+
+typeCheck([[ if (expression) block ]], m0) = 
+      let
+            val t1 = typeOf(expression, m0)
+            val m1 = typeCheck(block, m0)
+      in
+            if t1 = BOOL then 
+                  m0
+            else 
+                  raise model_error
+      end
+
+typeCheck([[ if (expression) block1 else block2 ]], m0) = 
+      let
+            val t1 = typeOf(expression, m0)
+            val m1 = typeCheck(block1, m0)
+            val m2 = typeCheck(block2, m0)
+      in
+            if t1 = BOOL then 
+                  m0
+            else 
+                  raise model_error
+      end
+
+typeCheck([[ while (expression) block ]], m0) = 
+      let
+            val t1 = typeOf(expression, m0)
+            val m1 = typeCheck(block, m0)
+      in
+            if t1 = BOOL then 
+                  m0
+            else 
+                  raise model_error
+      end
+
+typeCheck([[ for (assign; expression; loopIncrement) block ]], m0) =
+      let
+            val m1 = typeCheck(assign, m0)
+            val t1 = typeOf(expression, m1) 
+            val m2 = typeCheck(block, m1)
+            val m3 = typeCheck(loopIncrement, m1)
+      in
+            if t1 = BOOL then
+                  m0
+            else 
+                  raise model_error
+      end
+
+typeCheck([[ increment ]], m0) = 
+      let
+            val t1 = typeOf(increment, m0)
+      in
+            if t1 = INT then
+                  m0
+            else 
+                  raise model_error
+      end
+
+typeOf([[ disjunction ]], m0) = typeOf(disjunction, m0)
+
+typeOf([[ disjunction || conjunction ]], m0) = 
+      let
+            val t1 = typeOf(disjunction, m0)
+            val t2 = typeOf(conjunction, m0)
+      in
+            if t1 = BOOL andalso t2 = BOOL then 
+                  BOOL
+            else 
+                  ERROR
+      end
+
+typeOf([[ conjunction ]], m0) = typeOf(conjunction, m0)
+
+typeOf([[ conjunction && equality ]], m0) = 
+      let
+            val t1 = typeOf(conjunction, m0)
+            val t2 = typeOf(equality, m0)
+      in
+            if t1 = BOOL andalso t2 = BOOL then 
+                  BOOL
+            else 
+                  ERROR
+      end
+
+typeOf([[ equality ]], m0) = typeOf(equality, m0)
+
+typeOf([[ equality == relational ]], m0) = 
+      let
+            val t1 = typeOf(equality, m0)
+            val t2 = typeOf(relational, m0)
+      in
+            if t1 = t2 andalso t1 <> ERROR then 
+                  BOOL
+            else 
+                  ERROR
+      end
+
+typeOf([[ equality != relational ]], m0) = 
+      let
+            val t1 = typeOf(equality, m0)
+            val t2 = typeOf(relational, m0)
+      in
+            if t1 = t2 andalso t1 <> ERROR then 
+                  BOOL
+            else 
+                  ERROR
+      end
+
+typeOf([[ relational ]], m0) = typeOf(relational, m0)
+
+typeOf([[ relational < additive ]], m0) = 
+      let
+            val t1 = typeOf(relational, m0)
+            val t2 = typeOf(additive, m0)
+      in
+            if t1 = INT andalso t2 = INT then 
+                  BOOL
+            else 
+                  ERROR
+      end
+
+typeOf([[ relational > additive ]], m0) = 
+      let
+            val t1 = typeOf(relational, m0)
+            val t2 = typeOf(additive, m0)
+      in
+            if t1 = INT andalso t2 = INT then 
+                  BOOL
+            else 
+                  ERROR
+      end
+
+typeOf([[ additive ]], m0) = typeOf(additive, m0)
+
+typeOf([[ additive + multiplicative ]], m0) = 
+      let
+            val t1 = typeOf(additive, m0)
+            val t2 = typeOf(multiplicative, m0)
+      in
+            if t1 = INT andalso t2 = INT then 
+                  INT
+            else 
+                  ERROR
+            end
+
+typeOf([[ additive - multiplicative ]], m0) = 
+      let
+            val t1 = typeOf(additive, m0)
+            val t2 = typeOf(multiplicative, m0)
+      in
+            if t1 = INT andalso t2 = INT then 
+                  INT
+            else 
+                  ERROR
+      end
+
+typeOf([[ multiplicative ]], m0) = typeOf(multiplicative, m0)
+
+typeOf([[ multiplicative * negation ]], m0) = 
+      let
+            val t1 = typeOf(multiplicative, m0)
+            val t2 = typeOf(negation, m0)
+      in
+            if t1 = INT andalso t2 = INT then 
+                  INT
+            else 
+                  ERROR
+      end 
+
+typeOf([[ multiplicative / negation ]], m0) = 
+      let
+            val t1 = typeOf(multiplicative, m0)
+            val t2 = typeOf(negation, m0)
+      in
+            if t1 = INT andalso t2 = INT then 
+                  INT
+            else 
+                  ERROR
+      end
+
+typeOf([[ multiplicative % negation ]], m0) = 
+      let
+            val t1 = typeOf(multiplicative, m0)
+            val t2 = typeOf(negation, m0)
+      in
+            if t1 = INT andalso t2 = INT then 
+                  INT
+            else 
+                  ERROR
+      end
+
+typeOf([[ negation ]], m0) = typeOf(negation, m0)
+
+typeOf([[ ! negation ]], m0) =
+      let
+            val t1 = typeOf(negation, m0)
+      in
+            if t1 = BOOL then 
+                  BOOL
+            else 
+                  ERROR
+      end
+
+typeOf([[ ~ negation ]], m0) =
+      let
+            val t1 = typeOf(negation, m0)
+      in
+            if t1 = INT then 
+                  INT
+            else 
+                  ERROR
+      end
+
+typeOf([[ exponent ]], m0) = typeOf(exponent, m0)
+
+typeOf([[ absolute ^ exponent ]], m0) = 
+      let
+            val t1 = typeOf(absolute, m0)
+            val t2 = typeOf(exponent, m0)
+      in
+            if t1 = INT andalso t2 = INT then 
+                  INT
+            else 
+                  ERROR
+      end
+
+typeOf([[ absolute ]], m0) = typeOf(absolute, m0)
+
+typeOf([[ abs( absolute ) ]], m0) =
+      let
+            val t1 = typeOf(absolute, m0)
+      in
+            if t1 = INT then
+                  INT
+            else 
+                  ERROR
+      end 
+
+typeOf([[ base ]], m0) = typeOf(base, m0)
+
+typeOf([[ increment ]], m0)      = typeOf(increment, m0)
+typeOf([[ ( expression ) ]], m0) = typeOf(expression, m0)
+
+typeOf([[ id ]], m0) = getType(accessEnv(id, m0))
+
+typeOf([[ integer ]], m0) = INT
+typeOf([[ boolean ]], m0) = BOOL
+
+typeOf([[ id ++ ]]) = 
+      let
+            val t1 = getType(accessEnv(id, m0))
+      in
+            if t1 = INT then 
+                  INT
+            else 
+                  ERROR
+      end
+
+typeOf([[ id -- ]]) = 
+      let
+            val t1 = getType(accessEnv(id, m0))
+      in
+            if t1 = INT then 
+                  INT
+            else 
+                  ERROR
+      end
+
+typeOf([[ ++ id ]]) = 
+      let
+            val t1 = getType(accessEnv(id, m0))
+      in
+            if t1 = INT then 
+                  INT
+            else 
+                  ERROR
+      end
+
+typeOf([[ -- id ]]) = 
+      let
+            val t1 = getType(accessEnv(id, m0))
+      in
+            if t1 = INT then 
+                  INT
+            else 
+                  ERROR
+      end
