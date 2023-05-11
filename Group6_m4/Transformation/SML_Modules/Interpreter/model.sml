@@ -75,7 +75,6 @@ fun updateEnv( id1, t1, (env, loc, store) ) =
          (new_env(env), loc + 1, store)
       end
 
-
 (* updateStore: location * type * model → model 
  *    if the given location is present in the store, update the store,
  *    otherwise, add a new entry to the store.  *)
