@@ -247,7 +247,7 @@ E'([[ absolute ^ exponent ]], m0) =
 
 E'([[ absolute ]], m0) = E'(absolute, m0) 
 
-E'([[ abs( absolute ) ]]), m0) = 
+E'(([[ abs( absolute ) ]]), m0) = 
     let 
         val (term1, m1) = E'(absolute, m0) 
     in 
