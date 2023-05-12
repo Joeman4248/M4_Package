@@ -129,7 +129,6 @@ fun E( itree(inode("disjunction",_),
             
   | E( itree(inode("disjunction",_), [ conjunction ]), m ) = E(conjunction, m)
 
-
 (* <conjunction> ::= <conjunction> "&&" <equality> 
                    | <equality> *)
 fun E( itree(inode("conjunction",_),
@@ -210,7 +209,7 @@ fun E( itree(inode("relational"_), (* < *)
                 (term1 > term2, m2)
             end
             
- | E( itree(inode("relational"_), 
+  | E( itree(inode("relational"_), 
         [
             relational,
             itree(inode("<="_), []),
@@ -223,7 +222,7 @@ fun E( itree(inode("relational"_), (* < *)
                 (term1 <= term2, m2)
             end
 
- | E( itree(inode("relational"_), 
+  | E( itree(inode("relational"_), 
         [
             relational,
             itree(inode(">="_), []),
@@ -238,7 +237,7 @@ fun E( itree(inode("relational"_), (* < *)
             
   | E( itree(inode("relational",_), [ equality ]), m ) = E(additive, m)
 
-(* ---------- Integer Expressions ---------- *)
+(* ---------- Integer Expressions ----- *)
 
 (* <additive> ::= <additive> "+" <multiplicative> 
                 | <additive> "-" <multiplicative> 
