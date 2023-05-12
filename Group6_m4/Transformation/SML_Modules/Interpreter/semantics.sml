@@ -12,10 +12,10 @@ open CONCRETE_REPRESENTATION;
 (* The following tree structure, defined in the CONCERETE_REPRESENTATION structure, is used in the TL System:
 
     datatype NODE_INFO = info of { id : IntInf.int, line : int * int , column : int * int, label : string };
-	datatype INODE = inode of string * NODE_INFO
-	                 | ...  
-															
-	datatype ITREE = itree of INODE * ITREE list;
+    datatype INODE = inode of string * NODE_INFO
+                     | ...  
+                                                            
+    datatype ITREE = itree of INODE * ITREE list;
 *)
 
 
@@ -274,13 +274,94 @@ fun E( itree(inode("additive"_),
                       | <multiplicative> "/" <negation> 
                       | <multiplicative> "%" <negation> 
                       | <negation> *)
+fun E( itree(inode("multiplicative"_), 
+        [
+            multiplicative,
+            itree(inode("*"_), []),
+            negation
+        ]
+    ), m) = let
+                val (term1, m1) = E(multiplicative, m)
+                val (term2, m2) = E(negation, m1)
+            in
+                (term1 * term2, m2)
+            end
+            
+  | E( itree(inode("multiplicative"_), 
+        [
+            multiplicative,
+            itree(inode("/"_), []),
+            negation
+        ]
+    ), m) = let
+                val (term1, m1) = E(multiplicative, m)
+                val (term2, m2) = E(negation, m1)
+            in
+                (term1 / term2, m2)
+            end
+            
+  | E( itree(inode("multiplicative"_), 
+        [
+            multiplicative,
+            itree(inode("%"_), []),
+            negation
+        ]
+    ), m) = let
+                val (term1, m1) = E(multiplicative, m)
+                val (term2, m2) = E(negation, m1)
+            in
+                (term1 % term2, m2)
+            end
+
+  | E( itree(inode("multiplicative",_), [ negation ]), m ) = E(negation, m)
 
 (* <negation> ::= "!" <negation> 
                 | "~" <negation> 
                 | <exponent> *)
+fun E( itree(inode("negation"_), 
+        [
+            itree(inode("!"_), []),
+            negation
+        ]
+    ), m) = let
+                val (term1, m1) = E(negation, m)
+            in
+                (not term1, m1)
+            end
+            
+  | E( itree(inode("negation"_), 
+        [
+            itree(inode("~"_), []),
+            negation
+        ]
+    ), m) = let
+                val (term1, m1) = E(negation, m)
+            in
+                (~term1, m1)
+            end
+
+  | E( itree(inode("negation",_), [ exponent ]), m ) = E(exponent, m)
 
 (* <exponent> ::= <absolute> "^" <exponent> 
                 | <absolute> *)
+fun E( itree(inode("exponent"_), 
+        [
+            absolute,
+            itree(inode("^"_), []),
+            exponent
+        ]
+    ), m) = let
+                val (term1, m1) = E(absolute, m)
+                val (term2, m2) = E(exponent, m1)
+            in
+                (exp(term1, term2), m2)
+            end
+
+  | E( itree(inode("exponent",_), [ absolute ]), m ) = E(absolute, m)
+
+(******* Exponent helper function *******)
+fun exp(x, 0) = 1
+  | exp(x, y) = x * exp(x, y - 1)
 
 (* <absolute> ::= "abs" "(" <expression> ")" 
                 | <base> *)
