@@ -365,6 +365,23 @@ fun exp(x, 0) = 1
 
 (* <absolute> ::= "abs" "(" <expression> ")" 
                 | <base> *)
+fun E( itree(inode("absolute"_), 
+        [
+            itree(inode("abs"_), []),
+            itree(inode("("_), []),
+            expression
+            itree(inode(")"_), []),
+        ]
+    ), m) = let
+                val (term1, m1) = E(expression, m)
+            in
+                if term1 < 0 then
+                    (~term1, m1)
+                else
+                    (term1, m1)
+            end
+
+  | E( itree(inode("absolute",_), [ base ]), m ) = E(base, m)
 
 (* <base> ::= "(" <expression> ")" | <increment> 
             | id | boolean | integer *)
