@@ -22,14 +22,14 @@ prog
          | <conditional> 
          | <iteration> .
 
-<block> ::= "{" <stmtList> "}" .
-
 <declare> ::= "int"  id
             | "bool" id .
 
 <assign> ::= id "=" <expression> .
 
 <output> ::= "print" "(" <expression> ")" .
+
+<block> ::= "{" <stmtList> "}" .
 
 <conditional> ::= "if" "(" <expression> ")" <block> 
                 | "if" "(" <expression> ")" <block> "else" <block> .

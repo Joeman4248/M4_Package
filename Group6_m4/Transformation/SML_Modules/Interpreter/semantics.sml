@@ -81,27 +81,45 @@ fun M( itree( inode("stmtList",_), [ itree(inode("",_), []) ] ), m ) = m
         ]
     ), m ) = M( stmtList, M(stmt, m) )
 
-(* <stmt> ::= <block>  *)
-(* <stmt> ::= <declare> ";"  *)
-(* <stmt> ::= <assign> ";"  *)
-(* <stmt> ::= <initialize> ";" *)
-(* <stmt> ::= <output> ";"  *)
-(* <stmt> ::= <conditional>  *)
-(* <stmt> ::= <iteration>  *)
+(* <stmt> ::= <declare> ";" 
+            | <assign> ";" 
+            | <initialize> ";"
+            | <output> ";" 
+            | <block>
+            | <conditional> 
+            | <iteration> *)
+fun M( itree( inode("stmt"_), [ declare
+                                itree(inode(";",_), []) ] ), m) = M(declare, m)
 
+  | M( itree( inode("stmt"_), [ assign
+                                itree(inode(";",_), []) ] ), m) = M(assign, m)
 
-(* <declare> ::= "int"  id *)
-(* <declare> ::= "bool" id *)
+  | M( itree( inode("stmt"_), [ initialize
+                                itree(inode(";",_), []) ] ), m) = M(initialize, m)
+
+  | M( itree( inode("stmt"_), [ output
+                                itree(inode(";",_), []) ] ), m) = M(output, m)
+
+  | M( itree( inode("stmt"_), [ block ] ), m) = M(block, m)
+
+  | M( itree( inode("stmt"_), [ conditional ] ), m) = M(conditional, m)
+
+  | M( itree( inode("stmt"_), [ iteration ] ), m) = M(iteration, m)
+
+(* <declare> ::= "int"  id
+               | "bool" id *)
 
 (* <assign> ::= id "=" <expression> *)
 
 (* <output> ::= "print" "(" <expression> ")" *)
 
-(* <conditional> ::= "if" "(" <expression> ")" <block>  *)
-(* <conditional> ::= "if" "(" <expression> ")" <block> "else" <block> *)
+(* <block> ::= "{" <stmtList> "}" *)
 
-(* <iteration> ::= "while" "(" <expression> ")" <block>  *)
-(* <iteration> ::= "for" "(" <assign> ";" <expression> ";" <loopIncrement> ")" <block> *)
+(* <conditional> ::= "if" "(" <expression> ")" <block> 
+                   | "if" "(" <expression> ")" <block> "else" <block> *)
+
+(* <iteration> ::= "while" "(" <expression> ")" <block> 
+                 | "for" "(" <assign> ";" <expression> ";" <loopIncrement> ")" <block> *)
 
 (* <loopIncrement> ::= <assign> | <increment> *)
 
