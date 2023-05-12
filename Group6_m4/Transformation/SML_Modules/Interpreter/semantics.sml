@@ -183,7 +183,7 @@ fun E( itree(inode("equality"_),
                   | <relational> ">=" <additive> 
                   | <additive> *)
 
-fun E( itree(inode("relational"_), (* < *)
+fun E( itree(inode("relational"_), 
         [
             relational,
             itree(inode("<"_), []),
@@ -242,6 +242,33 @@ fun E( itree(inode("relational"_), (* < *)
 (* <additive> ::= <additive> "+" <multiplicative> 
                 | <additive> "-" <multiplicative> 
                 | <multiplicative> *)
+fun E( itree(inode("additive"_), 
+        [
+            additive,
+            itree(inode("+"_), []),
+            multiplicative
+        ]
+    ), m) = let
+                val (term1, m1) = E(additive, m)
+                val (term2, m2) = E(multiplicative, m1)
+            in
+                (term1 + term2, m2)
+            end
+            
+  | E( itree(inode("additive"_), 
+        [
+            additive,
+            itree(inode("-"_), []),
+            multiplicative
+        ]
+    ), m) = let
+                val (term1, m1) = E(additive, m)
+                val (term2, m2) = E(multiplicative, m1)
+            in
+                (term1 - term2, m2)
+            end
+
+  | E( itree(inode("additive",_), [ multiplicative ]), m ) = E(multiplicative, m)
 
 (* <multiplicative> ::= <multiplicative> "*" <negation> 
                       | <multiplicative> "/" <negation> 
