@@ -128,7 +128,7 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
             if t1 <> ERROR then
                 m
             else
-                raise Fail("ERROR: Invalid type")
+                raise Fail("ERROR: expected " ^ typeToString(INT) ^ ", but got " ^ typeToString(t1))
         end
 
 (* <block> ::= "{" <stmtList> "}" *)
@@ -163,7 +163,7 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
             if t1 = BOOL then
                 m
             else
-                raise Fail("ERROR: expression must evaluate to boolean")
+                raise Fail("ERROR: expected " ^ typeToString(BOOL) ^ ", but got " ^ typeToString(t1))
         end
 
   | typeCheck( itree(inode("conditional",_),
@@ -185,14 +185,34 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
             if t1 = BOOL then
                 m
             else
-                raise Fail("ERROR: expression must evaluate to boolean")
+                raise Fail("ERROR: expected " ^ typeToString(BOOL) ^ ", but got " ^ typeToString(t1))
         end
 
 (* <iteration> ::= "while" "(" <expression> ")" <block>
                  | "for" "(" <assign> ";" <expression> ";" <loopIncrement> ")" <block> *)
 
 (* <loopIncrement> ::= <assign> | <increment> *)
+  | typeCheck( itree( inode("loopIncrement",_),
+            [
+                assign as itree( inode("assign",_), [ _ ] )
+            ]
+        ), m
+    ) = typeCheck(assign, m)
 
+  | typeCheck( itree( inode("loopIncrement",_),
+            [
+                increment as itree( inode("increment",_), [ _ ] )
+            ]
+        ), m
+    ) =
+        let
+            val t1 = typeOf(increment, m)
+        in
+            if t1 = INT then
+                m
+            else
+                raise Fail("ERROR: expected " ^ typeToString(INT) ^ ", but got " ^ typeToString(t1))
+        end
 
   | typeCheck( itree(inode(x_root,_), children),_) = raise General.Fail("\n\nIn typeCheck root = " ^ x_root ^ "\n\n")
   | typeCheck _ = raise Fail("Error in Model.typeCheck - this should never occur")
