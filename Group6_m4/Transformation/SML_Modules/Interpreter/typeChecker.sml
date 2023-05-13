@@ -83,9 +83,9 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
             | <conditional>
             | <iteration> *)
   | typeCheck( itree( inode("stmt",_), [ child,
-                                         itree(inode(";",_), []) ] ), m) = M(child, m)
+                                         itree(inode(";",_), []) ] ), m) = typeCheck(child, m)
 
-  | typeCheck( itree( inode("stmt",_), [ child ] ), m) = M(child, m)
+  | typeCheck( itree( inode("stmt",_), [ child ] ), m) = typeCheck(child, m)
 
 (* <declare> ::= "int"  id
                | "bool" id *)
@@ -204,8 +204,7 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
                 increment as itree( inode("increment",_), [ _ ] )
             ]
         ), m
-    ) =
-        let
+    ) = let
             val t1 = typeOf(increment, m)
         in
             if t1 = INT then
