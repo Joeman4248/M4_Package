@@ -81,6 +81,7 @@ fun M( itree( inode("stmtList",_), [ itree(inode("",_), []) ] ), m ) = m
         ]
     ), m ) = M( stmtList, M(stmt, m) )
 
+(* NOTE: unsure about this *)
 (* <stmt> ::= <declare> ";" 
             | <assign> ";" 
             | <initialize> ";"
@@ -96,8 +97,44 @@ fun M( itree( inode("stmt"_), [ child,
 
 (* <declare> ::= "int"  id
                | "bool" id *)
+fun M( itree(inode("declare",_),
+        [
+            itree(inode("int",_), [] ),
+            id
+        ]
+    ), m) = let
+                val idStr = getLeaf(id)
+            in
+            	(* updateEnv( id, type, model ) *)
+                updateEnv(idStr, INT, m)
+            end
+    
+  | M( itree(inode("declare",_),
+        [
+            itree(inode("bool",_), [] ),
+            id
+        ]
+    ), m) = let
+                val idStr = getLeaf(id)
+            in
+            	(* updateEnv( id, type, model ) *)
+                updateEnv(idStr, BOOL, m)
+            end
 
 (* <assign> ::= id "=" <expression> *)
+fun M( itree(inode("assign",_),
+        [
+            id,
+            itree(inode("=",_), [] ),
+            expression
+        ]
+    ), m) = let
+                val idStr = getLeaf(id)
+                val (v1, m1) = E(expression, m)
+            in
+                (* updateStore( location, value, model ) *)
+                updateStore(getLoc(accessEnv(idStr, m1)), v1, m1) 
+            end
 
 (* <output> ::= "print" "(" <expression> ")" *)
 fun M( itree(inode("output",_),
@@ -170,13 +207,66 @@ fun M( itree(inode("conditional",_),
 
 (* <iteration> ::= "while" "(" <expression> ")" <block> 
                  | "for" "(" <assign> ";" <expression> ";" <loopIncrement> ")" <block> *)
+fun M( itree(inode("iteration",_),
+        [
+            itree(inode("while",_), [] ),
+            itree(inode("(",_), [] ),
+            expression,
+            itree(inode(")",_), [] ),
+            block
+        ]
+    ), m) = let
+                fun whileLoopHelper(expression, block, m) = 
+                    let
+                        val (cond, m1) = E(expression, m)
+                    in
+                        if cond then
+                            whileLoopHelper(expression, block, M(block, m1))
+                        else
+                            m1
+                    end
+            in
+                whileLoopHelper(expression, block, m)
+            end
 
+  | M( itree(inode("iteration",_),
+        [
+            itree(inode("for",_), [] ),
+            itree(inode("(",_), [] ), assign,
+            itree(inode(";",_), [] ), expression,
+            itree(inode(";",_), [] ), loopincrement,
+            itree(inode(")",_), [] ),
+            block
+        ]
+    ), m) = let
+                val m1 = M(assign, m)
+                fun forLoopHelper(expression, block, loopIncrement, m) = 
+                    let
+                        val (cond, m1) = E(expression, m)
+                    in
+                        if cond then
+                            let
+                                val m2 = M(block, m1)
+                                val m3 = M(loopIncrement, m2)
+                            in
+                                forLoopHelper(expression, block, loopIncrement, m3)
+                            end
+                        else
+                            m1
+                    end
+            in
+                forLoopHelper(expression, block, loopIncrement)
+            end
 
-
-
-
+(* NOTE: unsure about this *)
 (* <loopIncrement> ::= <assign> | <increment> *)
-fun M( itree( inode("loopIncrement"_), [ child ] ), m) = M(child, m)
+fun M( itree( inode("loopIncrement"_), [ assign ] ), m) = M(assign, m)
+  | M( itree( inode("loopIncrement"_), [ increment ] ), m) = 
+        let
+            val (v1, m1) = E(increment, m)
+        in
+            m1
+        end
 
 (* ---------- Boolean Expressions ---------- *)
 
