@@ -201,7 +201,7 @@ fun M( itree(inode("conditional",_),
                 if cond then
                     M(block1, m1)
                 else
-                    M(block2, m2)
+                    M(block2, m1)
             end
 
 
