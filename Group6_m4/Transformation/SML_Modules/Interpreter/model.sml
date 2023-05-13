@@ -45,7 +45,7 @@ fun getType(id, t, loc) = t
 
 (* accessEnv: identifier * model → environment *)
 fun accessEnv( id1, ([], _, _) ) = raise Fail("ERROR:" ^ id1 ^ "is undeclared in this scope!")
-| accessEnv( id1, ((id2, t2, loc2)::env, loc, store)) =
+  | accessEnv( id1, ((id2, t2, loc2)::env, loc, store)) =
     if (id1 = id2) then
         (id2, t2, loc2)
     else
@@ -53,7 +53,7 @@ fun accessEnv( id1, ([], _, _) ) = raise Fail("ERROR:" ^ id1 ^ "is undeclared in
 
 (* accessStore: location * model → value *)
 fun accessStore( _, (_, _, []) ) = raise Fail("ERROR: uninitialized variable!")
-| accessStore( loc1, (env, loc, (loc2, v2)::store)) =
+  | accessStore( loc1, (env, loc, (loc2, v2)::store)) =
     if (loc1 = loc2) then
         v2
     else
@@ -91,13 +91,13 @@ fun updateStore( loc1, v1, (env, loc, store) ) =
     end
 
 fun dvToBool(Boolean b) = b
-| dvToBool(Integer _) = raise Fail("Denotatable value is not a Boolean!")
+  | dvToBool(Integer _) = raise Fail("Denotatable value is not a Boolean!")
 
 fun dvToInt(Integer i) = i
-| dvToInt(Boolean _) = raise Fail("Denotatable value is not an Integer!")
+  | dvToInt(Boolean _) = raise Fail("Denotatable value is not an Integer!")
 
 fun dvToString(Integer v) = Int.toString(v)
-| dvToString(Boolean v) = Bool.toString(v)
+  | dvToString(Boolean v) = Bool.toString(v)
 
 fun typeToString(t) =
     if t = INT then       "integer"
