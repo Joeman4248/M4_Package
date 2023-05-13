@@ -477,7 +477,6 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
 
   | M( itree( inode("stmt",_), [ child ] ), m) = M(child, m)
 
-
 (* <declare> ::= "int"  id
                | "bool" id *)
   | M( itree(inode("declare",_), [ itree(inode("int",_), [] ),  id ]), m) = updateEnv(getLeaf(id), INT, m)
