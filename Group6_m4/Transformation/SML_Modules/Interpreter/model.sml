@@ -91,10 +91,10 @@ fun updateStore( loc1, v1, (env, loc, store) ) =
       end
 
 fun dvToBool(Boolean b) = b
-  | dvToBool(Integer _) = raise Fail("Denotatable value is not a Boolean")
+  | dvToBool(Integer _) = raise Fail("Denotatable value is not a Boolean!")
 
 fun dvToInt(Integer i) = i
-  | dvToInt(Boolean _) = raise Fail("Denotatable value is not an Integer")
+  | dvToInt(Boolean _) = raise Fail("Denotatable value is not an Integer!")
 
 fun dvToString(Integer v) = Int.toString(v)
   | dvToString(Boolean v) = Bool.toString(v)
