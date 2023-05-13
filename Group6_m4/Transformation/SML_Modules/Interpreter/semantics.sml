@@ -394,7 +394,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
         let
             val loc = getLoc(accessEnv(getLeaf(id), m))
             val v1 = accessStore(loc, m)
-            val v2 = v1 + 1 
+            val v2 = Integer(toInt(v1) + 1)
         in 
             (v1, updateStore(loc, v2, m)) 
         end
@@ -403,7 +403,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
         let
             val loc = getLoc(accessEnv(getLeaf(id), m))
             val v1 = accessStore(loc, m)
-            val v2 = v1 - 1 
+            val v2 = Integer(toInt(v1) - 1)
         in 
             (v1, updateStore(loc, v2, m)) 
         end
@@ -412,16 +412,16 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
         let
             val loc = getLoc(accessEnv(getLeaf(id), m))
             val v1 = accessStore(loc, m)
-            val v2 = v1 + 1 
+            val v2 = Integer(toInt(v1) + 1)
         in 
             (v2, updateStore(loc, v2, m)) 
         end
 
-  | E( itree(inode("increment",_), [ itree(inode("--",_), []), id ]), m) = 
+  | E( itree(inode("increment",_), [ itree(inode("--"_), []), id ]), m) = 
         let
             val loc = getLoc(accessEnv(getLeaf(id), m))
             val v1 = accessStore(loc, m)
-            val v2 = v1 - 1 
+            val v2 = Integer(toInt(v1) - 1)
         in 
             (v2, updateStore(loc, v2, m)) 
         end
