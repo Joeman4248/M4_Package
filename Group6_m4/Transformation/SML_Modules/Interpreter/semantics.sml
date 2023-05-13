@@ -85,10 +85,10 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
             | <block>
             | <conditional> 
             | <iteration> *)
-  | M( itree( inode("stmt"_), [ child,
+  | M( itree( inode("stmt",_), [ child,
                                 itree(inode(";",_), []) ] ), m) = M(child, m)
 
-  | M( itree( inode("stmt"_), [ child ] ), m) = M(child, m)
+  | M( itree( inode("stmt",_), [ child ] ), m) = M(child, m)
 
 
 (* <declare> ::= "int"  id
@@ -256,15 +256,15 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
 
 (* NOTE: unsure about this *)
 (* <loopIncrement> ::= <assign> | <increment> *)
-  | M( itree( inode("loopIncrement"_), 
+  | M( itree( inode("loopIncrement",_), 
         [ 
-            assign as itree( inode("assign"_), [ _ ] )
+            assign as itree( inode("assign",_), [ _ ] )
         ] 
     ), m) = M(assign, m)
     
-  | M( itree( inode("loopIncrement"_), 
+  | M( itree( inode("loopIncrement",_), 
         [ 
-            increment as itree( inode("increment"_), [ _ ] )
+            increment as itree( inode("increment",_), [ _ ] )
         ] 
     ), m) = let
                 val (v1, m1) = E(increment, m)
@@ -322,7 +322,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
 (* <equality> ::= <equality> "==" <relational> 
                 | <equality> "!=" <relational> 
                 | <relational> *)
-  | E( itree(inode("equality"_),
+  | E( itree(inode("equality",_),
         [
             equality,
             itree(inode("==",_), []),
@@ -335,7 +335,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 (term1 <> term2, m2)
             end
 
-  | E( itree(inode("equality"_), 
+  | E( itree(inode("equality",_), 
         [
             equality,
             itree(inode("!=",_), []),
@@ -356,10 +356,10 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                   | <relational> ">=" <additive> 
                   | <additive> *)
 
-  | E( itree(inode("relational"_), 
+  | E( itree(inode("relational",_), 
         [
             relational,
-            itree(inode("<"_), []),
+            itree(inode("<",_), []),
             additive
         ]
     ), m) = let
@@ -369,10 +369,10 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 (term1 < term2, m2)
             end
 
-  | E( itree(inode("relational"_), 
+  | E( itree(inode("relational",_), 
         [
             relational,
-            itree(inode(">"_), []),
+            itree(inode(">",_), []),
             additive
         ]
     ), m) = let
@@ -382,10 +382,10 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 (term1 > term2, m2)
             end
             
-  | E( itree(inode("relational"_), 
+  | E( itree(inode("relational",_), 
         [
             relational,
-            itree(inode("<="_), []),
+            itree(inode("<=",_), []),
             additive
         ]
     ), m) = let
@@ -395,10 +395,10 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 (term1 <= term2, m2)
             end
 
-  | E( itree(inode("relational"_), 
+  | E( itree(inode("relational",_), 
         [
             relational,
-            itree(inode(">="_), []),
+            itree(inode(">=",_), []),
             additive
         ]
     ), m) = let
@@ -415,10 +415,10 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
 (* <additive> ::= <additive> "+" <multiplicative> 
                 | <additive> "-" <multiplicative> 
                 | <multiplicative> *)
-  | E( itree(inode("additive"_), 
+  | E( itree(inode("additive",_), 
         [
             additive,
-            itree(inode("+"_), []),
+            itree(inode("+",_), []),
             multiplicative
         ]
     ), m) = let
@@ -428,10 +428,10 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 (term1 + term2, m2)
             end
             
-  | E( itree(inode("additive"_), 
+  | E( itree(inode("additive",_), 
         [
             additive,
-            itree(inode("-"_), []),
+            itree(inode("-",_), []),
             multiplicative
         ]
     ), m) = let
@@ -447,10 +447,10 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                       | <multiplicative> "/" <negation> 
                       | <multiplicative> "%" <negation> 
                       | <negation> *)
-  | E( itree(inode("multiplicative"_), 
+  | E( itree(inode("multiplicative",_), 
         [
             multiplicative,
-            itree(inode("*"_), []),
+            itree(inode("*",_), []),
             negation
         ]
     ), m) = let
@@ -460,10 +460,10 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 (term1 * term2, m2)
             end
             
-  | E( itree(inode("multiplicative"_), 
+  | E( itree(inode("multiplicative",_), 
         [
             multiplicative,
-            itree(inode("/"_), []),
+            itree(inode("/",_), []),
             negation
         ]
     ), m) = let
@@ -473,10 +473,10 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 (term1 / term2, m2)
             end
             
-  | E( itree(inode("multiplicative"_), 
+  | E( itree(inode("multiplicative",_), 
         [
             multiplicative,
-            itree(inode("%"_), []),
+            itree(inode("%",_), []),
             negation
         ]
     ), m) = let
@@ -491,9 +491,9 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
 (* <negation> ::= "!" <negation> 
                 | "~" <negation> 
                 | <exponent> *)
-  | E( itree(inode("negation"_), 
+  | E( itree(inode("negation",_), 
         [
-            itree(inode("!"_), []),
+            itree(inode("!",_), []),
             negation
         ]
     ), m) = let
@@ -502,9 +502,9 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 (not term1, m1)
             end
             
-  | E( itree(inode("negation"_), 
+  | E( itree(inode("negation",_), 
         [
-            itree(inode("~"_), []),
+            itree(inode("~",_), []),
             negation
         ]
     ), m) = let
@@ -517,10 +517,10 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
 
 (* <exponent> ::= <absolute> "^" <exponent> 
                 | <absolute> *)
-  | E( itree(inode("exponent"_), 
+  | E( itree(inode("exponent",_), 
         [
             absolute,
-            itree(inode("^"_), []),
+            itree(inode("^",_), []),
             exponent
         ]
     ), m) = let
@@ -534,12 +534,12 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
 
 (* <absolute> ::= "abs" "(" <expression> ")" 
                 | <base> *)
-  | E( itree(inode("absolute"_), 
+  | E( itree(inode("absolute",_), 
         [
-            itree(inode("abs"_), []),
-            itree(inode("("_), []),
+            itree(inode("abs",_), []),
+            itree(inode("(",_), []),
             expression
-            itree(inode(")"_), []),
+            itree(inode(")",_), []),
         ]
     ), m) = let
                 val (term1, m1) = E(expression, m)
@@ -556,9 +556,9 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
             | id | boolean | integer *)
   | E( itree(inode("base",_), 
         [
-            itree(inode("("_), []),
+            itree(inode("(",_), []),
             expression
-            itree(inode(")"_), [])
+            itree(inode(")",_), [])
         ]
     ), m) = E(expression, m)
 
@@ -572,7 +572,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                  | id "--" 
                  | "++" id 
                  | "--" id *)
-  | E( itree(inode("increment",_), [ id, itree(inode("++"_), []) ]), m) = 
+  | E( itree(inode("increment",_), [ id, itree(inode("++",_), []) ]), m) = 
         let
             val loc = getLoc(accessEnv(id, m))
             val v1 = accessStore(loc, m)
@@ -581,7 +581,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
             (v1, updateStore(loc, v2, m)) 
         end
 
-  | E( itree(inode("increment",_), [ id, itree(inode("--"_), []) ]), m) = 
+  | E( itree(inode("increment",_), [ id, itree(inode("--",_), []) ]), m) = 
         let
             val loc = getLoc(accessEnv(id, m))
             val v1 = accessStore(loc, m)
@@ -590,7 +590,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
             (v1, updateStore(loc, v2, m)) 
         end
 
-  | E( itree(inode("increment",_), [ itree(inode("++"_), []), id ]), m) = 
+  | E( itree(inode("increment",_), [ itree(inode("++",_), []), id ]), m) = 
         let
             val loc = getLoc(accessEnv(id, m))
             val v1 = accessStore(loc, m)
@@ -599,7 +599,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
             (v2, updateStore(loc, v2, m)) 
         end
 
-  | E( itree(inode("increment",_), [ itree(inode("--"_), []), id ]), m) = 
+  | E( itree(inode("increment",_), [ itree(inode("--",_), []), id ]), m) = 
         let
             val loc = getLoc(accessEnv(id, m))
             val v1 = accessStore(loc, m)
@@ -617,9 +617,9 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
             (value, m)
         end
 
-  | E( itree(inode("boolean",_), [ itree(inode("true"_), []) ]), m) = (true, m)
+  | E( itree(inode("boolean",_), [ itree(inode("true",_), []) ]), m) = (true, m)
 
-  | E( itree(inode("boolean",_), [ itree(inode("false"_), []) ]), m) = (false, m)
+  | E( itree(inode("boolean",_), [ itree(inode("false",_), []) ]), m) = (false, m)
 
   | E( itree(inode("integer",_), [ int_val ]), m) = 
         let
