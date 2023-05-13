@@ -428,7 +428,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
         end
 
 (* id | boolean | integer *)
-  | E( id_name as itree(inode("id",_), [ _ ]), m ) = 
+  | E( itree(inode("id",_), [ id_name ]), m ) = 
         let
             val idStr = getLeaf(id_name)
             val value = accessStore(getLoc(accessEnv(idStr, m)), m)
@@ -440,7 +440,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
 
   | E( itree(inode("boolean",_), [ itree(inode("false",_), []) ]), m) = (Boolean false, m)
 
-  | E( int_val as itree(inode("integer",_), [ _ ]), m) = 
+  | E( itree(inode("integer",_), [ int_val ]), m) = 
         let
             val value = valOf(Int.fromString(getLeaf(int_val)))
         in
@@ -473,37 +473,17 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
             | <block>
             | <conditional> 
             | <iteration> *)
-  | M( itree( inode("stmt",_), [ child,
-                                itree(inode(";",_), []) ] ), m) = M(child, m)
+  | M( itree( inode("stmt",_), [ child, 
+                                 itree(inode(";",_), []) ] ), m) = M(child, m)
 
   | M( itree( inode("stmt",_), [ child ] ), m) = M(child, m)
 
 
 (* <declare> ::= "int"  id
                | "bool" id *)
-  | M( itree(inode("declare",_),
-        [
-            itree(inode("int",_), [] ),
-            id
-        ]
-    ), m) = let
-                val idStr = getLeaf(id)
-            in
-            	(* updateEnv( id, type, model ) *)
-                updateEnv(idStr, INT, m)
-            end
+  | M( itree(inode("declare",_), [ itree(inode("int",_), [] ),  id ]), m) = updateEnv(getLeaf(id), INT, m)
     
-  | M( itree(inode("declare",_),
-        [
-            itree(inode("bool",_), [] ),
-            id
-        ]
-    ), m) = let
-                val idStr = getLeaf(id)
-            in
-            	(* updateEnv( id, type, model ) *)
-                updateEnv(idStr, BOOL, m)
-            end
+  | M( itree(inode("declare",_), [ itree(inode("bool",_), [] ), id ]), m) = updateEnv(getLeaf(id), BOOL, m)
 
 (* <assign> ::= id "=" <expression> *)
   | M( itree(inode("assign",_),
@@ -531,6 +511,7 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
     ), m) = let
                 val (v1, m1) = E(expression, m)
             in
+                print(dvToString(v1) ^ "\n");
                 m1
             end
 
@@ -544,9 +525,8 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
     ), m) = let
                 val (env0, loc0, s0) = m
                 val (env1, loc1, s1) = M(stmtList, m)
-                val m2 = (env0, loc0, s1)
             in
-                m2
+                (env0, loc0, s1)
             end
 
 (* <conditional> ::= "if" "(" <expression> ")" <block> 
@@ -645,7 +625,6 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
                 forLoopHelper(expression, block, loopIncrement, m)
             end
 
-(* NOTE: unsure about this *)
 (* <loopIncrement> ::= <assign> | <increment> *)
   | M( itree( inode("loopIncrement",_), 
         [ 
