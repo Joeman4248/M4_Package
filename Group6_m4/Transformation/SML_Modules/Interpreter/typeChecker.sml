@@ -110,7 +110,7 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
             if t1 = t2 then
                 m
             else
-                raise Fail("ERROR: cannot assign " ^ typeToString(t1) ^ " to variable of type " ^ typeToString(t2))
+                raise Fail("ERROR: cannot assign " ^ typeToString(t1) ^ " to variable of type: " ^ typeToString(t2))
         end
 
 (* <output> ::= "print" "(" <expression> ")" *)
@@ -128,7 +128,7 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
             if t1 <> ERROR then
                 m
             else
-                raise Fail("ERROR: expected " ^ typeToString(INT) ^ ", but received " ^ typeToString(t1))
+                raise Fail("ERROR: cannot print expression of type: " ^ typeToString(t1))
         end
 
 (* <block> ::= "{" <stmtList> "}" *)
