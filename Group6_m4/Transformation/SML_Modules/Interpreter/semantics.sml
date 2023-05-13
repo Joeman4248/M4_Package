@@ -75,40 +75,42 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
 (* <disjunction> ::= <disjunction> "||" <conjunction>
                    | <conjunction> *)
   | E( itree(inode("disjunction",_),
-        [
-            disjunction,
-            itree(inode("||",_), [] ),
-            conjunction
-        ]
-    ), m) = let
-                val (v1, m1) = E(disjunction, m)
-                val term1 = dvToBool(v1)
-            in
-                if term1 then
-                    (v1, m1)
-                else
-                    E(conjunction, m1)
-            end
+            [
+                disjunction,
+                itree(inode("||",_), [] ),
+                conjunction
+            ]
+        ), m
+    ) = let
+            val (v1, m1) = E(disjunction, m)
+            val term1 = dvToBool(v1)
+        in
+            if term1 then
+                (v1, m1)
+            else
+                E(conjunction, m1)
+        end
 
   | E( itree(inode("disjunction",_), [ conjunction ]), m ) = E(conjunction, m)
 
 (* <conjunction> ::= <conjunction> "&&" <equality>
                    | <equality> *)
   | E( itree(inode("conjunction",_),
-        [
-            conjunction,
-            itree(inode("&&",_), [] ),
-            equality
-        ]
-    ), m) = let
-                val (v1, m1) = E(conjunction, m)
-                val term1 = dvToBool(v1)
-            in
-                if not term1 then
-                    (v1, m1)
-                else
-                    E(equality, m1)
-            end
+            [
+                conjunction,
+                itree(inode("&&",_), [] ),
+                equality
+            ]
+        ), m
+    ) = let
+            val (v1, m1) = E(conjunction, m)
+            val term1 = dvToBool(v1)
+        in
+            if not term1 then
+                (v1, m1)
+            else
+                E(equality, m1)
+        end
 
   | E( itree(inode("conjunction",_), [ equality ]), m ) = E(equality, m)
 
@@ -116,34 +118,36 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 | <equality> "!=" <relational>
                 | <relational> *)
   | E( itree(inode("equality",_),
-        [
-            equality,
-            itree(inode("==",_), []),
-            relational
-        ]
-    ), m) = let
-                val (v1, m1) = E(equality, m)
-                val (v2, m2) = E(relational, m1)
-                val term1 = dvToBool(v1)
-                val term2 = dvToBool(v2)
-            in
-                (Boolean (term1 <> term2), m2)
-            end
+            [
+                equality,
+                itree(inode("==",_), []),
+                relational
+            ]
+        ), m
+    ) = let
+            val (v1, m1) = E(equality, m)
+            val (v2, m2) = E(relational, m1)
+            val term1 = dvToBool(v1)
+            val term2 = dvToBool(v2)
+        in
+            (Boolean (term1 <> term2), m2)
+        end
 
   | E( itree(inode("equality",_),
-        [
-            equality,
-            itree(inode("!=",_), []),
-            relational
-        ]
-    ), m) = let
-                val (v1, m1) = E(equality, m)
-                val (v2, m2) = E(relational, m1)
-                val term1 = dvToBool(v1)
-                val term2 = dvToBool(v2)
-            in
-                (Boolean (term1 <> term2), m2)
-            end
+            [
+                equality,
+                itree(inode("!=",_), []),
+                relational
+            ]
+        ), m
+    ) = let
+            val (v1, m1) = E(equality, m)
+            val (v2, m2) = E(relational, m1)
+            val term1 = dvToBool(v1)
+            val term2 = dvToBool(v2)
+        in
+            (Boolean (term1 <> term2), m2)
+        end
 
   | E( itree(inode("equality",_), [ relational ]), m ) = E(relational, m)
 
@@ -153,64 +157,68 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                   | <relational> ">=" <additive>
                   | <additive> *)
   | E( itree(inode("relational",_),
-        [
-            relational,
-            itree(inode("<",_), []),
-            additive
-        ]
-    ), m) = let
-                val (v1, m1) = E(relational, m)
-                val (v2, m2) = E(additive, m1)
-                val term1 = dvToInt(v1)
-                val term2 = dvToInt(v2)
-            in
-                (Boolean (term1 < term2), m2)
-            end
+            [
+                relational,
+                itree(inode("<",_), []),
+                additive
+            ]
+        ), m
+    ) = let
+            val (v1, m1) = E(relational, m)
+            val (v2, m2) = E(additive, m1)
+            val term1 = dvToInt(v1)
+            val term2 = dvToInt(v2)
+        in
+            (Boolean (term1 < term2), m2)
+        end
 
   | E( itree(inode("relational",_),
-        [
-            relational,
-            itree(inode(">",_), []),
-            additive
-        ]
-    ), m) = let
-                val (v1, m1) = E(relational, m)
-                val (v2, m2) = E(additive, m1)
-                val term1 = dvToInt(v1)
-                val term2 = dvToInt(v2)
-            in
-                (Boolean (term1 > term2), m2)
-            end
+            [
+                relational,
+                itree(inode(">",_), []),
+                additive
+            ]
+        ), m
+    ) = let
+            val (v1, m1) = E(relational, m)
+            val (v2, m2) = E(additive, m1)
+            val term1 = dvToInt(v1)
+            val term2 = dvToInt(v2)
+        in
+            (Boolean (term1 > term2), m2)
+        end
 
   | E( itree(inode("relational",_),
-        [
-            relational,
-            itree(inode("<=",_), []),
-            additive
-        ]
-    ), m) = let
-                val (v1, m1) = E(relational, m)
-                val (v2, m2) = E(additive, m1)
-                val term1 = dvToInt(v1)
-                val term2 = dvToInt(v2)
-            in
-                (Boolean (term1 <= term2), m2)
-            end
+            [
+                relational,
+                itree(inode("<=",_), []),
+                additive
+            ]
+        ), m
+    ) = let
+            val (v1, m1) = E(relational, m)
+            val (v2, m2) = E(additive, m1)
+            val term1 = dvToInt(v1)
+            val term2 = dvToInt(v2)
+        in
+            (Boolean (term1 <= term2), m2)
+        end
 
   | E( itree(inode("relational",_),
-        [
-            relational,
-            itree(inode(">=",_), []),
-            additive
-        ]
-    ), m) = let
-                val (v1, m1) = E(relational, m)
-                val (v2, m2) = E(additive, m1)
-                val term1 = dvToInt(v1)
-                val term2 = dvToInt(v2)
-            in
-                (Boolean (term1 >= term2), m2)
-            end
+            [
+                relational,
+                itree(inode(">=",_), []),
+                additive
+            ]
+        ), m
+    ) = let
+            val (v1, m1) = E(relational, m)
+            val (v2, m2) = E(additive, m1)
+            val term1 = dvToInt(v1)
+            val term2 = dvToInt(v2)
+        in
+            (Boolean (term1 >= term2), m2)
+        end
 
   | E( itree(inode("relational",_), [ additive ]), m ) = E(additive, m)
 
@@ -218,34 +226,36 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 | <additive> "-" <multiplicative>
                 | <multiplicative> *)
   | E( itree(inode("additive",_),
-        [
-            additive,
-            itree(inode("+",_), []),
-            multiplicative
-        ]
-    ), m) = let
-                val (v1, m1) = E(additive, m)
-                val (v2, m2) = E(multiplicative, m1)
-                val term1 = dvToInt(v1)
-                val term2 = dvToInt(v2)
-            in
-                (Integer (term1 + term2), m2)
-            end
+            [
+                additive,
+                itree(inode("+",_), []),
+                multiplicative
+            ]
+        ), m
+    ) = let
+            val (v1, m1) = E(additive, m)
+            val (v2, m2) = E(multiplicative, m1)
+            val term1 = dvToInt(v1)
+            val term2 = dvToInt(v2)
+        in
+            (Integer (term1 + term2), m2)
+        end
 
   | E( itree(inode("additive",_),
-        [
-            additive,
-            itree(inode("-",_), []),
-            multiplicative
-        ]
-    ), m) = let
-                val (v1, m1) = E(additive, m)
-                val (v2, m2) = E(multiplicative, m1)
-                val term1 = dvToInt(v1)
-                val term2 = dvToInt(v2)
-            in
-                (Integer (term1 - term2), m2)
-            end
+            [
+                additive,
+                itree(inode("-",_), []),
+                multiplicative
+            ]
+        ), m
+    ) = let
+            val (v1, m1) = E(additive, m)
+            val (v2, m2) = E(multiplicative, m1)
+            val term1 = dvToInt(v1)
+            val term2 = dvToInt(v2)
+        in
+            (Integer (term1 - term2), m2)
+        end
 
   | E( itree(inode("additive",_), [ multiplicative ]), m ) = E(multiplicative, m)
 
@@ -254,49 +264,52 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                       | <multiplicative> "%" <negation>
                       | <negation> *)
   | E( itree(inode("multiplicative",_),
-        [
-            multiplicative,
-            itree(inode("*",_), []),
-            negation
-        ]
-    ), m) = let
-                val (v1, m1) = E(multiplicative, m)
-                val (v2, m2) = E(negation, m1)
-                val term1 = dvToInt(v1)
-                val term2 = dvToInt(v2)
-            in
-                (Integer (term1 * term2), m2)
-            end
+            [
+                multiplicative,
+                itree(inode("*",_), []),
+                negation
+            ]
+        ), m
+    ) = let
+            val (v1, m1) = E(multiplicative, m)
+            val (v2, m2) = E(negation, m1)
+            val term1 = dvToInt(v1)
+            val term2 = dvToInt(v2)
+        in
+            (Integer (term1 * term2), m2)
+        end
 
   | E( itree(inode("multiplicative",_),
-        [
-            multiplicative,
-            itree(inode("/",_), []),
-            negation
-        ]
-    ), m) = let
-                val (v1, m1) = E(multiplicative, m)
-                val (v2, m2) = E(negation, m1)
-                val term1 = dvToInt(v1)
-                val term2 = dvToInt(v2)
-            in
-                (Integer (term1 div term2), m2)
-            end
+            [
+                multiplicative,
+                itree(inode("/",_), []),
+                negation
+            ]
+        ), m
+    ) = let
+            val (v1, m1) = E(multiplicative, m)
+            val (v2, m2) = E(negation, m1)
+            val term1 = dvToInt(v1)
+            val term2 = dvToInt(v2)
+        in
+            (Integer (term1 div term2), m2)
+        end
 
   | E( itree(inode("multiplicative",_),
-        [
-            multiplicative,
-            itree(inode("%",_), []),
-            negation
-        ]
-    ), m) = let
-                val (v1, m1) = E(multiplicative, m)
-                val (v2, m2) = E(negation, m1)
-                val term1 = dvToInt(v1)
-                val term2 = dvToInt(v2)
-            in
-                (Integer (term1 mod term2), m2)
-            end
+            [
+                multiplicative,
+                itree(inode("%",_), []),
+                negation
+            ]
+        ), m
+    ) = let
+            val (v1, m1) = E(multiplicative, m)
+            val (v2, m2) = E(negation, m1)
+            val term1 = dvToInt(v1)
+            val term2 = dvToInt(v2)
+        in
+            (Integer (term1 mod term2), m2)
+        end
 
   | E( itree(inode("multiplicative",_), [ negation ]), m ) = E(negation, m)
 
@@ -304,86 +317,87 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 | "~" <negation>
                 | <exponent> *)
   | E( itree(inode("negation",_),
-        [
-            itree(inode("!",_), []),
-            negation
-        ]
-    ), m) = let
-                val (v1, m1) = E(negation, m)
-                val term1 = dvToBool(v1)
-            in
-                (Boolean (not term1), m1)
-            end
+            [
+                itree(inode("!",_), []),
+                negation
+            ]
+        ), m
+    ) = let
+            val (v1, m1) = E(negation, m)
+            val term1 = dvToBool(v1)
+        in
+            (Boolean (not term1), m1)
+        end
 
   | E( itree(inode("negation",_),
-        [
-            itree(inode("~",_), []),
-            negation
-        ]
-    ), m) = let
-                val (v1, m1) = E(negation, m)
-                val term1 = dvToInt(v1)
-            in
-                (Integer (~term1), m1)
-            end
+            [
+                itree(inode("~",_), []),
+                negation
+            ]
+        ), m
+    ) = let
+            val (v1, m1) = E(negation, m)
+            val term1 = dvToInt(v1)
+        in
+            (Integer (~term1), m1)
+        end
 
   | E( itree(inode("negation",_), [ exponent ]), m ) = E(exponent, m)
 
 (* <exponent> ::= <absolute> "^" <exponent>
                 | <absolute> *)
   | E( itree(inode("exponent",_),
-        [
-            absolute,
-            itree(inode("^",_), []),
-            exponent
-        ]
-    ), m) = let
-                val (v1, m1) = E(absolute, m)
-                val (v2, m2) = E(exponent, m1)
-                val term1 = dvToInt(v1)
-                val term2 = dvToInt(v2)
-            in
-                (Integer (exp(term1, term2)), m2)
-            end
+            [
+                absolute,
+                itree(inode("^",_), []),
+                exponent
+            ]
+        ), m
+    ) = let
+            val (v1, m1) = E(absolute, m)
+            val (v2, m2) = E(exponent, m1)
+            val term1 = dvToInt(v1)
+            val term2 = dvToInt(v2)
+        in
+            (Integer (exp(term1, term2)), m2)
+        end
 
   | E( itree(inode("exponent",_), [ absolute ]), m ) = E(absolute, m)
 
 (* <absolute> ::= "abs" "(" <expression> ")"
                 | <base> *)
   | E( itree(inode("absolute",_),
-        [
-            itree(inode("abs",_), []),
-            itree(inode("(",_), []),
-            expression,
-            itree(inode(")",_), [])
-        ]
-    ), m) = let
-                val (v1, m1) = E(expression, m)
-                val term1 = dvToInt(v1)
-            in
-                if term1 < 0 then
-                    (Integer (~term1), m1)
-                else
-                    (Integer term1, m1)
-            end
+            [
+                itree(inode("abs",_), []),
+                itree(inode("(",_), []),
+                expression,
+                itree(inode(")",_), [])
+            ]
+        ), m
+    ) = let
+            val (v1, m1) = E(expression, m)
+            val term1 = dvToInt(v1)
+        in
+            if term1 < 0 then
+                (Integer (~term1), m1)
+            else
+                (Integer term1, m1)
+        end
 
   | E( itree(inode("absolute",_), [ base ]), m ) = E(base, m)
 
 (* <base> ::= "(" <expression> ")" | <increment>
             | id | boolean | integer *)
   | E( itree(inode("base",_),
-        [
-            itree(inode("(",_), []),
-            expression,
-            itree(inode(")",_), [])
-        ]
-    ), m) = E(expression, m)
+            [
+                itree(inode("(",_), []),
+                expression,
+                itree(inode(")",_), [])
+            ]
+        ), m
+    ) = E(expression, m)
 
-  | E( itree(inode("base",_),
-        [
-            child
-        ]
-    ), m) = E(child, m)
+  | E( itree(inode("base",_), [ child ]), m) = E(child, m)
 
 (* <increment> ::= id "++"
                  | id "--"
@@ -458,11 +472,12 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
 (* <stmtList> ::= <stmt> <stmtList> | . *)
   | M( itree( inode("stmtList",_), [ itree(inode("",_), []) ] ), m ) = m
   | M( itree( inode("stmtList",_),
-        [
-            stmt,
-            stmtList
-        ]
-    ), m ) = M( stmtList, M(stmt, m) )
+            [
+                stmt,
+                stmtList
+            ]
+        ), m
+    ) = M( stmtList, M(stmt, m) )
 
 (* NOTE: unsure about this *)
 (* <stmt> ::= <declare> ";"
@@ -485,160 +500,171 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
 
 (* <assign> ::= id "=" <expression> *)
   | M( itree(inode("assign",_),
-        [
-            id,
-            itree(inode("=",_), [] ),
-            expression
-        ]
-    ), m) = let
-                val idStr = getLeaf(id)
-                val (v1, m1) = E(expression, m)
-            in
-                (* updateStore( location, value, model ) *)
-                updateStore(getLoc(accessEnv(idStr, m1)), v1, m1)
-            end
+            [
+                id,
+                itree(inode("=",_), [] ),
+                expression
+            ]
+        ), m
+    ) = let
+            val idStr = getLeaf(id)
+            val (v1, m1) = E(expression, m)
+        in
+            (* updateStore( location, value, model ) *)
+            updateStore(getLoc(accessEnv(idStr, m1)), v1, m1)
+        end
 
 (* <output> ::= "print" "(" <expression> ")" *)
   | M( itree(inode("output",_),
-        [
-            itree(inode("print",_), [] ),
-            itree(inode("(",_), [] ),
-            expression,
-            itree(inode(")",_), [] )
-        ]
-    ), m) = let
-                val (v1, m1) = E(expression, m)
-            in
-                print(dvToString(v1) ^ "\n");
-                m1
-            end
+            [
+                itree(inode("print",_), [] ),
+                itree(inode("(",_), [] ),
+                expression,
+                itree(inode(")",_), [] )
+            ]
+        ), m
+    ) = let
+            val (v1, m1) = E(expression, m)
+        in
+            print(dvToString(v1) ^ "\n");
+            m1
+        end
 
 (* <block> ::= "{" <stmtList> "}" *)
   | M( itree(inode("block",_),
-        [
-            itree(inode("{",_), [] ),
-            stmtList,
-            itree(inode("}",_), [] )
-        ]
-    ), m) = let
-                val (env0, loc0, s0) = m
-                val (env1, loc1, s1) = M(stmtList, m)
-            in
-                (env0, loc0, s1)
-            end
+            [
+                itree(inode("{",_), [] ),
+                stmtList,
+                itree(inode("}",_), [] )
+            ]
+        ), m
+    ) = let
+            val (env0, loc0, s0) = m
+            val (env1, loc1, s1) = M(stmtList, m)
+        in
+            (env0, loc0, s1)
+        end
 
 (* <conditional> ::= "if" "(" <expression> ")" <block>
                    | "if" "(" <expression> ")" <block> "else" <block> *)
   | M( itree(inode("conditional",_),
-        [
-            itree(inode("if",_), [] ),
-            itree(inode("(",_), [] ),
-            expression,
-            itree(inode(")",_), [] ),
-            block
-        ]
-    ), m) = let
-                val (v1, m1) = E(expression, m)
-                val cond = dvToBool(v1)
-            in
-                if cond then
-                    M(block, m1)
-                else
-                    m1
-            end
+            [
+                itree(inode("if",_), [] ),
+                itree(inode("(",_), [] ),
+                expression,
+                itree(inode(")",_), [] ),
+                block
+            ]
+        ), m
+    ) = let
+            val (v1, m1) = E(expression, m)
+            val cond = dvToBool(v1)
+        in
+            if cond then
+                M(block, m1)
+            else
+                m1
+        end
 
   | M( itree(inode("conditional",_),
-        [
-            itree(inode("if",_), [] ),
-            itree(inode("(",_), [] ),
-            expression,
-            itree(inode(")",_), [] ),
-            block1,
-            itree(inode("else",_), [] ),
-            block2
-        ]
-    ), m) = let
-                val (v1, m1) = E(expression, m)
-                val cond = dvToBool(v1)
-            in
-                if cond then
-                    M(block1, m1)
-                else
-                    M(block2, m1)
-            end
+            [
+                itree(inode("if",_), [] ),
+                itree(inode("(",_), [] ),
+                expression,
+                itree(inode(")",_), [] ),
+                block1,
+                itree(inode("else",_), [] ),
+                block2
+            ]
+        ), m
+    ) = let
+            val (v1, m1) = E(expression, m)
+            val cond = dvToBool(v1)
+        in
+            if cond then
+                M(block1, m1)
+            else
+                M(block2, m1)
+        end
 
 
 (* <iteration> ::= "while" "(" <expression> ")" <block>
                  | "for" "(" <assign> ";" <expression> ";" <loopIncrement> ")" <block> *)
   | M( itree(inode("iteration",_),
-        [
-            itree(inode("while",_), [] ),
-            itree(inode("(",_), [] ),
-            expression,
-            itree(inode(")",_), [] ),
-            block
-        ]
-    ), m) = let
-                fun whileLoopHelper(expression, block, m) =
-                    let
-                        val (v1, m1) = E(expression, m)
-                        val cond = dvToBool(v1)
-                    in
-                        if cond then
-                            whileLoopHelper(expression, block, M(block, m1))
-                        else
-                            m1
-                    end
-            in
-                whileLoopHelper(expression, block, m)
-            end
+            [
+                itree(inode("while",_), [] ),
+                itree(inode("(",_), [] ),
+                expression,
+                itree(inode(")",_), [] ),
+                block
+            ]
+        ), m
+    ) = let
+            fun whileLoopHelper(expression, block, m) =
+                let
+                    val (v1, m1) = E(expression, m)
+                    val cond = dvToBool(v1)
+                in
+                    if cond then
+                        whileLoopHelper(expression, block, M(block, m1))
+                    else
+                        m1
+                end
+        in
+            whileLoopHelper(expression, block, m)
+        end
 
   | M( itree(inode("iteration",_),
-        [
-            itree(inode("for",_), [] ),
-            itree(inode("(",_), [] ), assign,
-            itree(inode(";",_), [] ), expression,
-            itree(inode(";",_), [] ), loopIncrement,
-            itree(inode(")",_), [] ),
-            block
-        ]
-    ), m) = let
-                val m1 = M(assign, m)
-                fun forLoopHelper(expression, block, loopIncrement, m) =
-                    let
-                        val (v1, m1) = E(expression, m)
-                        val cond = dvToBool(v1)
-                    in
-                        if cond then
-                            let
-                                val m2 = M(block, m1)
-                                val m3 = M(loopIncrement, m2)
-                            in
-                                forLoopHelper(expression, block, loopIncrement, m3)
-                            end
-                        else
-                            m1
-                    end
-            in
-                forLoopHelper(expression, block, loopIncrement, m)
-            end
+            [
+                itree(inode("for",_), [] ),
+                itree(inode("(",_), [] ), assign,
+                itree(inode(";",_), [] ), expression,
+                itree(inode(";",_), [] ), loopIncrement,
+                itree(inode(")",_), [] ),
+                block
+            ]
+        ), m
+    ) =
+        let
+            val m1 = M(assign, m)
+            fun forLoopHelper(expression, block, loopIncrement, m) =
+                let
+                    val (v1, m1) = E(expression, m)
+                    val cond = dvToBool(v1)
+                in
+                    if cond then
+                        let
+                            val m2 = M(block, m1)
+                            val m3 = M(loopIncrement, m2)
+                        in
+                            forLoopHelper(expression, block, loopIncrement, m3)
+                        end
+                    else
+                        m1
+                end
+        in
+            forLoopHelper(expression, block, loopIncrement, m)
+        end
 
 (* <loopIncrement> ::= <assign> | <increment> *)
   | M( itree( inode("loopIncrement",_),
-        [
-            assign as itree( inode("assign",_), [ _ ] )
-        ]
-    ), m) = M(assign, m)
+            [
+                assign as itree( inode("assign",_), [ _ ] )
+            ]
+        ), m
+    ) = M(assign, m)
 
   | M( itree( inode("loopIncrement",_),
-        [
-            increment as itree( inode("increment",_), [ _ ] )
-        ]
-    ), m) = let
-                val (v1, m1) = E(increment, m)
-            in
-                m1
-            end
+            [
+                increment as itree( inode("increment",_), [ _ ] )
+            ]
+        ), m
+    ) =
+        let
+            val (v1, m1) = E(increment, m)
+        in
+            m1
+        end
 
   | M( itree(inode(x_root,_), children),_) = raise General.Fail("\n\nIn M root = " ^ x_root ^ "\n\n")
 
