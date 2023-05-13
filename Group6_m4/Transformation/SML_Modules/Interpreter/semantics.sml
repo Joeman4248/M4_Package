@@ -162,8 +162,8 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
     ), m) = let
                 val (v1, m1) = E(relational, m)
                 val (v2, m2) = E(additive, m1)
-                val term1 = dvToBool(v1)
-                val term2 = dvToBool(v2)
+                val term1 = dvToInt(v1)
+                val term2 = dvToInt(v2)
             in
                 (Boolean (term1 < term2), m2)
             end
@@ -177,8 +177,8 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
     ), m) = let
                 val (v1, m1) = E(relational, m)
                 val (v2, m2) = E(additive, m1)
-                val term1 = dvToBool(v1)
-                val term2 = dvToBool(v2)
+                val term1 = dvToInt(v1)
+                val term2 = dvToInt(v2)
             in
                 (Boolean (term1 > term2), m2)
             end
@@ -192,8 +192,8 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
     ), m) = let
                 val (v1, m1) = E(relational, m)
                 val (v2, m2) = E(additive, m1)
-                val term1 = dvToBool(v1)
-                val term2 = dvToBool(v2)
+                val term1 = dvToInt(v1)
+                val term2 = dvToInt(v2)
             in
                 (Boolean (term1 <= term2), m2)
             end
@@ -207,8 +207,8 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
     ), m) = let
                 val (v1, m1) = E(relational, m)
                 val (v2, m2) = E(additive, m1)
-                val term1 = dvToBool(v1)
-                val term2 = dvToBool(v2)
+                val term1 = dvToInt(v1)
+                val term2 = dvToInt(v2)
             in
                 (Boolean (term1 >= term2), m2)
             end
@@ -281,7 +281,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 val term1 = dvToInt(v1)
                 val term2 = dvToInt(v2)
             in
-                (Integer (term1 / term2), m2)
+                (Integer (term1 div term2), m2)
             end
             
   | E( itree(inode("multiplicative",_), 
@@ -363,9 +363,9 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 val term1 = dvToInt(v1)
             in
                 if term1 < 0 then
-                    (~v1, m1)
+                    (Integer (~term1), m1)
                 else
-                    (v1, m1)
+                    (Integer term1, m1)
             end
 
   | E( itree(inode("absolute",_), [ base ]), m ) = E(base, m)
@@ -394,7 +394,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
         let
             val loc = getLoc(accessEnv(getLeaf(id), m))
             val v1 = accessStore(loc, m)
-            val v2 = Integer(toInt(v1) + 1)
+            val v2 = Integer (dvToInt(v1) + 1)
         in 
             (v1, updateStore(loc, v2, m)) 
         end
@@ -403,7 +403,8 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
         let
             val loc = getLoc(accessEnv(getLeaf(id), m))
             val v1 = accessStore(loc, m)
-            val v2 = Integer(toInt(v1) - 1)
+            val v2 = Integer (dvToInt(v1) - 1)
+            
         in 
             (v1, updateStore(loc, v2, m)) 
         end
@@ -412,22 +413,22 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
         let
             val loc = getLoc(accessEnv(getLeaf(id), m))
             val v1 = accessStore(loc, m)
-            val v2 = Integer(toInt(v1) + 1)
+            val v2 = Integer (dvToInt(v1) + 1)
         in 
             (v2, updateStore(loc, v2, m)) 
         end
 
-  | E( itree(inode("increment",_), [ itree(inode("--"_), []), id ]), m) = 
+  | E( itree(inode("increment",_), [ itree(inode("--",_), []), id ]), m) = 
         let
             val loc = getLoc(accessEnv(getLeaf(id), m))
             val v1 = accessStore(loc, m)
-            val v2 = Integer(toInt(v1) - 1)
+            val v2 = Integer (dvToInt(v1) - 1)
         in 
             (v2, updateStore(loc, v2, m)) 
         end
 
 (* id | boolean | integer *)
-  | E( itree(inode("id",_), [ id_name ]), m ) = 
+  | E( id_name as itree(inode("id",_), [ _ ]), m ) = 
         let
             val idStr = getLeaf(id_name)
             val value = accessStore(getLoc(accessEnv(idStr, m)), m)
@@ -439,11 +440,11 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
 
   | E( itree(inode("boolean",_), [ itree(inode("false",_), []) ]), m) = (Boolean false, m)
 
-  | E( itree(inode("integer",_), [ int_val ]), m) = 
+  | E( int_val as itree(inode("integer",_), [ _ ]), m) = 
         let
             val value = valOf(Int.fromString(getLeaf(int_val)))
         in
-            (value, m)
+            (Integer value, m)
         end
 
   | E( itree(inode(x_root,_), children),_) = raise General.Fail("\n\nIn M root = " ^ x_root ^ "\n\n")
@@ -530,7 +531,6 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
     ), m) = let
                 val (v1, m1) = E(expression, m)
             in
-                print(valueToString(v1))
                 m1
             end
 
@@ -542,9 +542,9 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
             itree(inode("}",_), [] )
         ]
     ), m) = let
-                val (env0, s0) = m
-                val (env1, s1) = M(stmtList, m)
-                val m2 = (env0, s1)
+                val (env0, loc0, s0) = m
+                val (env1, loc1, s1) = M(stmtList, m)
+                val m2 = (env0, loc0, s1)
             in
                 m2
             end
@@ -642,7 +642,7 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
                             m1
                     end
             in
-                forLoopHelper(expression, block, loopIncrement)
+                forLoopHelper(expression, block, loopIncrement, m)
             end
 
 (* NOTE: unsure about this *)

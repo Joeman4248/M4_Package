@@ -90,8 +90,11 @@ fun updateStore( loc1, v1, (env, loc, store) ) =
          (env, loc, new_store(store))
       end
 
-fun dvToBool(Boolean b) = b
-fun dvToInt(Integer i) = i
+fun dvToBool _ = raise Fail("Denotatable value is not a Boolean")
+  | dvToBool(Boolean b) = b
+  
+fun dvToInt _ = raise Fail("Denotatable value is not an Integer")
+  | dvToInt(Integer i) = i
 
 (* fun envToString(env) *)
 
