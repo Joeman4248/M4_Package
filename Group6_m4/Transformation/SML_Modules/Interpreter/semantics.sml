@@ -85,7 +85,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 val term1 = dvToBool(v1)
             in
                 if term1 then
-                    (term1, m1)
+                    (v1, m1)
                 else
                     E(conjunction, m1)
             end
@@ -105,7 +105,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 val term1 = dvToBool(v1)
             in
                 if not term1 then
-                    (term1, m1)
+                    (v1, m1)
                 else
                     E(equality, m1)
             end
@@ -127,7 +127,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 val term1 = dvToBool(v1)
                 val term2 = dvToBool(v2)
             in
-                (term1 <> term2, m2)
+                (Boolean (term1 <> term2), m2)
             end
 
   | E( itree(inode("equality",_), 
@@ -142,7 +142,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 val term1 = dvToBool(v1)
                 val term2 = dvToBool(v2)
             in
-                (term1 <> term2, m2)
+                (Boolean (term1 <> term2), m2)
             end
 
   | E( itree(inode("equality",_), [ relational ]), m ) = E(relational, m)
@@ -165,7 +165,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 val term1 = dvToBool(v1)
                 val term2 = dvToBool(v2)
             in
-                (term1 < term2, m2)
+                (Boolean (term1 < term2), m2)
             end
 
   | E( itree(inode("relational",_), 
@@ -180,7 +180,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 val term1 = dvToBool(v1)
                 val term2 = dvToBool(v2)
             in
-                (term1 > term2, m2)
+                (Boolean (term1 > term2), m2)
             end
             
   | E( itree(inode("relational",_), 
@@ -195,7 +195,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 val term1 = dvToBool(v1)
                 val term2 = dvToBool(v2)
             in
-                (term1 <= term2, m2)
+                (Boolean (term1 <= term2), m2)
             end
 
   | E( itree(inode("relational",_), 
@@ -210,10 +210,10 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 val term1 = dvToBool(v1)
                 val term2 = dvToBool(v2)
             in
-                (term1 >= term2, m2)
+                (Boolean (term1 >= term2), m2)
             end
             
-  | E( itree(inode("relational",_), [ equality ]), m ) = E(additive, m)
+  | E( itree(inode("relational",_), [ additive ]), m ) = E(additive, m)
 
 (* <additive> ::= <additive> "+" <multiplicative> 
                 | <additive> "-" <multiplicative> 
@@ -230,7 +230,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 val term1 = dvToInt(v1)
                 val term2 = dvToInt(v2)
             in
-                (term1 + term2, m2)
+                (Integer (term1 + term2), m2)
             end
             
   | E( itree(inode("additive",_), 
@@ -245,7 +245,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 val term1 = dvToInt(v1)
                 val term2 = dvToInt(v2)
             in
-                (term1 - term2, m2)
+                (Integer (term1 - term2), m2)
             end
 
   | E( itree(inode("additive",_), [ multiplicative ]), m ) = E(multiplicative, m)
@@ -266,7 +266,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 val term1 = dvToInt(v1)
                 val term2 = dvToInt(v2)
             in
-                (term1 * term2, m2)
+                (Integer (term1 * term2), m2)
             end
             
   | E( itree(inode("multiplicative",_), 
@@ -281,7 +281,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 val term1 = dvToInt(v1)
                 val term2 = dvToInt(v2)
             in
-                (term1 / term2, m2)
+                (Integer (term1 / term2), m2)
             end
             
   | E( itree(inode("multiplicative",_), 
@@ -296,7 +296,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 val term1 = dvToInt(v1)
                 val term2 = dvToInt(v2)
             in
-                (term1 mod term2, m2)
+                (Integer (term1 mod term2), m2)
             end
 
   | E( itree(inode("multiplicative",_), [ negation ]), m ) = E(negation, m)
@@ -313,7 +313,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 val (v1, m1) = E(negation, m)
                 val term1 = dvToBool(v1)
             in
-                (not term1, m1)
+                (Boolean (not term1), m1)
             end
             
   | E( itree(inode("negation",_), 
@@ -325,7 +325,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 val (v1, m1) = E(negation, m)
                 val term1 = dvToInt(v1)
             in
-                (~term1, m1)
+                (Integer (~term1), m1)
             end
 
   | E( itree(inode("negation",_), [ exponent ]), m ) = E(exponent, m)
@@ -344,7 +344,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                 val term1 = dvToInt(v1)
                 val term2 = dvToInt(v2)
             in
-                (exp(term1, term2), m2)
+                (Integer (exp(term1, term2)), m2)
             end
 
   | E( itree(inode("exponent",_), [ absolute ]), m ) = E(absolute, m)
@@ -355,17 +355,17 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
         [
             itree(inode("abs",_), []),
             itree(inode("(",_), []),
-            expression
-            itree(inode(")",_), []),
+            expression,
+            itree(inode(")",_), [])
         ]
     ), m) = let
                 val (v1, m1) = E(expression, m)
                 val term1 = dvToInt(v1)
             in
                 if term1 < 0 then
-                    (~term1, m1)
+                    (~v1, m1)
                 else
-                    (term1, m1)
+                    (v1, m1)
             end
 
   | E( itree(inode("absolute",_), [ base ]), m ) = E(base, m)
@@ -375,7 +375,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
   | E( itree(inode("base",_), 
         [
             itree(inode("(",_), []),
-            expression
+            expression,
             itree(inode(")",_), [])
         ]
     ), m) = E(expression, m)
@@ -435,9 +435,9 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
             (value, m)
         end
 
-  | E( itree(inode("boolean",_), [ itree(inode("true",_), []) ]), m) = (true, m)
+  | E( itree(inode("boolean",_), [ itree(inode("true",_), []) ]), m) = (Boolean true, m)
 
-  | E( itree(inode("boolean",_), [ itree(inode("false",_), []) ]), m) = (false, m)
+  | E( itree(inode("boolean",_), [ itree(inode("false",_), []) ]), m) = (Boolean false, m)
 
   | E( itree(inode("integer",_), [ int_val ]), m) = 
         let
@@ -575,7 +575,7 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
             itree(inode("(",_), [] ),
             expression,
             itree(inode(")",_), [] ),
-            block1
+            block1,
             itree(inode("else",_), [] ),
             block2
         ]
