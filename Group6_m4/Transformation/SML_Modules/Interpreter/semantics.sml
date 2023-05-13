@@ -234,7 +234,7 @@ fun M( itree(inode("iteration",_),
             itree(inode("for",_), [] ),
             itree(inode("(",_), [] ), assign,
             itree(inode(";",_), [] ), expression,
-            itree(inode(";",_), [] ), loopincrement,
+            itree(inode(";",_), [] ), loopIncrement,
             itree(inode(")",_), [] ),
             block
         ]
@@ -339,6 +339,8 @@ fun E( itree(inode("equality"_),
             in
                 (term1 <> term2, m2)
             end
+
+  | E( itree(inode("equality",_), [ relational ]), m ) = E(relational, m)
 
 (* <relational> ::= <relational> "<" <additive> 
                   | <relational> ">" <additive> 
