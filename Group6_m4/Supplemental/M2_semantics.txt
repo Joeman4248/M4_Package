@@ -265,8 +265,8 @@ E'([[ ( expression ) ]], m0) = E'(expression, m0)
 
 E'([[ id ]], m0) = 
     let 
-        var loc = getLoc(accessEnv(id, m0)) 
-        var v1 = accessStore(loc, m0) 
+        val loc = getLoc(accessEnv(id, m0)) 
+        val v1 = accessStore(loc, m0) 
     in 
         (v1, m0) 
     end 
@@ -277,36 +277,36 @@ E'([[ boolean ]], m0) = (boolean, m0)
 
 E'([[ id ++ ]], m0) =  
     let 
-        var loc = getLoc(accessEnv(id, m0)) 
-        var v1 = accessStore(loc, m0) 
-        var v2 = v1 + 1 
+        val loc = getLoc(accessEnv(id, m0)) 
+        val v1 = accessStore(loc, m0) 
+        val v2 = v1 + 1 
     in 
         (v1, updateStore(loc, v2, m0)) 
     end 
 
 E'([[ id -- ]], m0) =  
     let 
-        var loc = getLoc(accessEnv(id, m0)) 
-        var v1 = accessStore(loc, m0) 
-        var v2 = v1 - 1 
+        val loc = getLoc(accessEnv(id, m0)) 
+        val v1 = accessStore(loc, m0) 
+        val v2 = v1 - 1 
     in 
         (v1, updateStore(loc, v2, m0)) 
     end 
 
 E'([[ ++ id ]], m0) =  
     let 
-        var loc = getLoc(accessEnv(id, m0)) 
-        var v1 = accessStore(loc, m0) 
-        var v2 = v1 + 1 
+        val loc = getLoc(accessEnv(id, m0)) 
+        val v1 = accessStore(loc, m0) 
+        val v2 = v1 + 1 
     in 
         (v2, updateStore(loc, v2, m0)) 
     end 
 
 E'([[ -- id ]], m0) =  
     let 
-        var loc = getLoc(accessEnv(id, m0)) 
-        var v1 = accessStore(loc, m0) 
-        var v2 = v1 - 1 
+        val loc = getLoc(accessEnv(id, m0)) 
+        val v1 = accessStore(loc, m0) 
+        val v2 = v1 - 1 
     in 
         (v2, updateStore(loc, v2, m0)) 
     end 

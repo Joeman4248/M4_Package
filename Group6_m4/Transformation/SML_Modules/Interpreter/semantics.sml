@@ -68,12 +68,8 @@ open CONCRETE_REPRESENTATION;
 (* <prog> ::= <stmtList> . *)
 fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
         
-  | M( itree(inode(x_root,_), children),_) = raise General.Fail("\n\nIn M root = " ^ x_root ^ "\n\n")
-  
-  | M _ = raise Fail("error in Semantics.M - this should never occur")
-
 (* <stmtList> ::= <stmt> <stmtList> | . *)
-fun M( itree( inode("stmtList",_), [ itree(inode("",_), []) ] ), m ) = m
+  | M( itree( inode("stmtList",_), [ itree(inode("",_), []) ] ), m ) = m
   | M( itree( inode("stmtList",_), 
         [ 
             stmt, 
@@ -89,7 +85,7 @@ fun M( itree( inode("stmtList",_), [ itree(inode("",_), []) ] ), m ) = m
             | <block>
             | <conditional> 
             | <iteration> *)
-fun M( itree( inode("stmt"_), [ child,
+  | M( itree( inode("stmt"_), [ child,
                                 itree(inode(";",_), []) ] ), m) = M(child, m)
 
   | M( itree( inode("stmt"_), [ child ] ), m) = M(child, m)
@@ -97,7 +93,7 @@ fun M( itree( inode("stmt"_), [ child,
 
 (* <declare> ::= "int"  id
                | "bool" id *)
-fun M( itree(inode("declare",_),
+  | M( itree(inode("declare",_),
         [
             itree(inode("int",_), [] ),
             id
@@ -122,7 +118,7 @@ fun M( itree(inode("declare",_),
             end
 
 (* <assign> ::= id "=" <expression> *)
-fun M( itree(inode("assign",_),
+  | M( itree(inode("assign",_),
         [
             id,
             itree(inode("=",_), [] ),
@@ -137,7 +133,7 @@ fun M( itree(inode("assign",_),
             end
 
 (* <output> ::= "print" "(" <expression> ")" *)
-fun M( itree(inode("output",_),
+  | M( itree(inode("output",_),
         [
             itree(inode("print",_), [] ),
             itree(inode("(",_), [] ),
@@ -152,7 +148,7 @@ fun M( itree(inode("output",_),
             end
 
 (* <block> ::= "{" <stmtList> "}" *)
-fun M( itree(inode("block",_),
+  | M( itree(inode("block",_),
         [
             itree(inode("{",_), [] ),
             stmtList,
@@ -168,7 +164,7 @@ fun M( itree(inode("block",_),
 
 (* <conditional> ::= "if" "(" <expression> ")" <block> 
                    | "if" "(" <expression> ")" <block> "else" <block> *)
-fun M( itree(inode("conditional",_),
+  | M( itree(inode("conditional",_),
         [
             itree(inode("if",_), [] ),
             itree(inode("(",_), [] ),
@@ -207,7 +203,7 @@ fun M( itree(inode("conditional",_),
 
 (* <iteration> ::= "while" "(" <expression> ")" <block> 
                  | "for" "(" <assign> ";" <expression> ";" <loopIncrement> ")" <block> *)
-fun M( itree(inode("iteration",_),
+  | M( itree(inode("iteration",_),
         [
             itree(inode("while",_), [] ),
             itree(inode("(",_), [] ),
@@ -260,13 +256,25 @@ fun M( itree(inode("iteration",_),
 
 (* NOTE: unsure about this *)
 (* <loopIncrement> ::= <assign> | <increment> *)
-fun M( itree( inode("loopIncrement"_), [ assign ] ), m) = M(assign, m)
-  | M( itree( inode("loopIncrement"_), [ increment ] ), m) = 
-        let
-            val (v1, m1) = E(increment, m)
-        in
-            m1
-        end
+  | M( itree( inode("loopIncrement"_), 
+        [ 
+            assign as itree( inode("assign"_), [ _ ] )
+        ] 
+    ), m) = M(assign, m)
+    
+  | M( itree( inode("loopIncrement"_), 
+        [ 
+            increment as itree( inode("increment"_), [ _ ] )
+        ] 
+    ), m) = let
+                val (v1, m1) = E(increment, m)
+            in
+                m1
+            end
+
+  | M( itree(inode(x_root,_), children),_) = raise General.Fail("\n\nIn M root = " ^ x_root ^ "\n\n")
+  
+  | M _ = raise Fail("error in Semantics.M - this should never occur")
 
 (* ---------- Boolean Expressions ---------- *)
 
@@ -275,7 +283,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
 
 (* <disjunction> ::= <disjunction> "||" <conjunction> 
                    | <conjunction> *)
-fun E( itree(inode("disjunction",_),
+  | E( itree(inode("disjunction",_),
         [
             disjunction,
             itree(inode("||",_), [] ),
@@ -294,7 +302,7 @@ fun E( itree(inode("disjunction",_),
 
 (* <conjunction> ::= <conjunction> "&&" <equality> 
                    | <equality> *)
-fun E( itree(inode("conjunction",_),
+  | E( itree(inode("conjunction",_),
         [
             conjunction,
             itree(inode("&&",_), [] ),
@@ -314,7 +322,7 @@ fun E( itree(inode("conjunction",_),
 (* <equality> ::= <equality> "==" <relational> 
                 | <equality> "!=" <relational> 
                 | <relational> *)
-fun E( itree(inode("equality"_),
+  | E( itree(inode("equality"_),
         [
             equality,
             itree(inode("==",_), []),
@@ -348,7 +356,7 @@ fun E( itree(inode("equality"_),
                   | <relational> ">=" <additive> 
                   | <additive> *)
 
-fun E( itree(inode("relational"_), 
+  | E( itree(inode("relational"_), 
         [
             relational,
             itree(inode("<"_), []),
@@ -407,7 +415,7 @@ fun E( itree(inode("relational"_),
 (* <additive> ::= <additive> "+" <multiplicative> 
                 | <additive> "-" <multiplicative> 
                 | <multiplicative> *)
-fun E( itree(inode("additive"_), 
+  | E( itree(inode("additive"_), 
         [
             additive,
             itree(inode("+"_), []),
@@ -439,7 +447,7 @@ fun E( itree(inode("additive"_),
                       | <multiplicative> "/" <negation> 
                       | <multiplicative> "%" <negation> 
                       | <negation> *)
-fun E( itree(inode("multiplicative"_), 
+  | E( itree(inode("multiplicative"_), 
         [
             multiplicative,
             itree(inode("*"_), []),
@@ -483,7 +491,7 @@ fun E( itree(inode("multiplicative"_),
 (* <negation> ::= "!" <negation> 
                 | "~" <negation> 
                 | <exponent> *)
-fun E( itree(inode("negation"_), 
+  | E( itree(inode("negation"_), 
         [
             itree(inode("!"_), []),
             negation
@@ -509,7 +517,7 @@ fun E( itree(inode("negation"_),
 
 (* <exponent> ::= <absolute> "^" <exponent> 
                 | <absolute> *)
-fun E( itree(inode("exponent"_), 
+  | E( itree(inode("exponent"_), 
         [
             absolute,
             itree(inode("^"_), []),
@@ -524,13 +532,9 @@ fun E( itree(inode("exponent"_),
 
   | E( itree(inode("exponent",_), [ absolute ]), m ) = E(absolute, m)
 
-(******* Exponent helper function *******)
-fun exp(x, 0) = 1
-  | exp(x, y) = x * exp(x, y - 1)
-
 (* <absolute> ::= "abs" "(" <expression> ")" 
                 | <base> *)
-fun E( itree(inode("absolute"_), 
+  | E( itree(inode("absolute"_), 
         [
             itree(inode("abs"_), []),
             itree(inode("("_), []),
@@ -548,13 +552,91 @@ fun E( itree(inode("absolute"_),
 
   | E( itree(inode("absolute",_), [ base ]), m ) = E(base, m)
 
-(* <base> ::= "(" <expression> ")" | <increment> 
+(* <base> ::= "(" <expression> ")" | <increment>
             | id | boolean | integer *)
+  | E( itree(inode("base",_), 
+        [
+            itree(inode("("_), []),
+            expression
+            itree(inode(")"_), [])
+        ]
+    ), m) = E(expression, m)
+
+  | E( itree(inode("base",_), 
+        [
+            child
+        ]
+    ), m) = E(child, m)
 
 (* <increment> ::= id "++" 
                  | id "--" 
                  | "++" id 
                  | "--" id *)
+  | E( itree(inode("increment",_), [ id, itree(inode("++"_), []) ]), m) = 
+        let
+            val loc = getLoc(accessEnv(id, m))
+            val v1 = accessStore(loc, m)
+            val v2 = v1 + 1 
+        in 
+            (v1, updateStore(loc, v2, m)) 
+        end
+
+  | E( itree(inode("increment",_), [ id, itree(inode("--"_), []) ]), m) = 
+        let
+            val loc = getLoc(accessEnv(id, m))
+            val v1 = accessStore(loc, m)
+            val v2 = v1 - 1 
+        in 
+            (v1, updateStore(loc, v2, m)) 
+        end
+
+  | E( itree(inode("increment",_), [ itree(inode("++"_), []), id ]), m) = 
+        let
+            val loc = getLoc(accessEnv(id, m))
+            val v1 = accessStore(loc, m)
+            val v2 = v1 + 1 
+        in 
+            (v2, updateStore(loc, v2, m)) 
+        end
+
+  | E( itree(inode("increment",_), [ itree(inode("--"_), []), id ]), m) = 
+        let
+            val loc = getLoc(accessEnv(id, m))
+            val v1 = accessStore(loc, m)
+            val v2 = v1 - 1 
+        in 
+            (v2, updateStore(loc, v2, m)) 
+        end
+
+(* id | boolean | integer *)
+  | E( itree(inode("id",_), [ id_name ]), m ) = 
+        let
+            val idStr = getLeaf(id_name)
+            val value = accessStore(getLoc(accessEnv(idStr, m)), m)
+        in
+            (value, m)
+        end
+
+  | E( itree(inode("boolean",_), [ itree(inode("true"_), []) ]), m) = (true, m)
+
+  | E( itree(inode("boolean",_), [ itree(inode("false"_), []) ]), m) = (false, m)
+
+  | E( itree(inode("integer",_), [ int_val ]), m) = 
+        let
+            val value = valOf(Int.fromString(getLeaf(int_val)))
+        in
+            (value, m)
+        end
+
+  | E( itree(inode(x_root,_), children),_) = raise General.Fail("\n\nIn M root = " ^ x_root ^ "\n\n")
+  
+  | E _ = raise Fail("error in Semantics.M - this should never occur")
+
+
+
+(******* Exponent helper function *******)
+fun exp(x, 0) = 1
+  | exp(x, y) = x * exp(x, y - 1)
 
 (* =========================================================================================================== *)
 end (* struct *)

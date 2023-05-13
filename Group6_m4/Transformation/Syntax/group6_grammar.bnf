@@ -80,8 +80,8 @@ prog
 <absolute> ::= "abs" "(" <expression> ")" 
              | <base> .
 
-<base> ::= "(" <expression> ")" | <increment> 
-         | id | boolean | integer .
+<base> ::= id | boolean | integer
+         | "(" <expression> ")" | <increment> .
 
 <increment> ::= id "++" 
               | id "--" 
