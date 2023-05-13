@@ -152,7 +152,6 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
                   | <relational> "<=" <additive> 
                   | <relational> ">=" <additive> 
                   | <additive> *)
-
   | E( itree(inode("relational",_), 
         [
             relational,

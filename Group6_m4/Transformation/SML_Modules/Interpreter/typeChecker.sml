@@ -90,7 +90,7 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
 (* <declare> ::= "int"  id
                | "bool" id *)
   | typeCheck( itree( inode("declare"), 
-        [ itree(inode("int",_), []),  id ] ), m ) = updateEnv(getLeaf(id), INT, m)
+        [ itree(inode("int",_), []),  id ] ), m ) = updateEnv(getLeaf(id), INT,  m)
 
   | typeCheck( itree( inode("declare"), 
         [ itree(inode("bool",_), []), id ] ), m ) = updateEnv(getLeaf(id), BOOL, m)
