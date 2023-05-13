@@ -624,8 +624,7 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
                 block
             ]
         ), m
-    ) =
-        let
+    ) = let
             val m1 = M(assign, m)
             fun forLoopHelper(expression, block, loopIncrement, m) =
                 let

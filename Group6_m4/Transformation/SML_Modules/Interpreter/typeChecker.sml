@@ -190,6 +190,45 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
 
 (* <iteration> ::= "while" "(" <expression> ")" <block>
                  | "for" "(" <assign> ";" <expression> ";" <loopIncrement> ")" <block> *)
+  | typeCheck( itree(inode("iteration",_),
+            [
+                itree(inode("while",_), [] ),
+                itree(inode("(",_), [] ),
+                expression,
+                itree(inode(")",_), [] ),
+                block
+            ]
+        ), m
+    ) = let
+            val t1 = typeOf(expression, m)
+        in
+            if t1 = BOOL then
+                m
+            else
+                raise Fail("ERROR: expected " ^ typeToString(BOOL) ^ ", but got " ^ typeToString(t1))
+        end
+
+  | typeCheck( itree(inode("iteration",_),
+            [
+                itree(inode("for",_), [] ),
+                itree(inode("(",_), [] ), assign,
+                itree(inode(";",_), [] ), expression,
+                itree(inode(";",_), [] ), loopIncrement,
+                itree(inode(")",_), [] ),
+                block
+            ]
+        ), m
+    ) = let
+            val m1 = typeCheck(assign, m)
+            val t1 = typeOf(expression, m1)
+            val m2 = typeCheck(block, m1)
+            val m3 = typeCheck(loopIncrement, m3)
+        in
+            if t1 = BOOL then
+                m
+            else
+                raise Fail("ERROR: expected " ^ typeToString(BOOL) ^ ", but got " ^ typeToString(t1))
+        end
 
 (* <loopIncrement> ::= <assign> | <increment> *)
   | typeCheck( itree( inode("loopIncrement",_),
