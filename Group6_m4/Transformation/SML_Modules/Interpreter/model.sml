@@ -90,11 +90,8 @@ fun updateStore( loc1, v1, (env, loc, store) ) =
          (env, loc, new_store(store))
       end
 
-(* valueToString: Converts a user-defined value of type 'int' or 'bool' to a string *)
-fun valueToString(Integer v) = Int.toString(v)
-  | valueToString(Boolean v) = Boolean.toString(v)
-
-fun typeToString(t) = if t = INT then "int" else "bool"
+fun dvToBool(Boolean b) = b
+fun dvToInt(Integer i) = i
 
 (* fun envToString(env) *)
 
