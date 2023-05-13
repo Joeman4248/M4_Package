@@ -128,7 +128,7 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
             if t1 <> ERROR then
                 m
             else
-                raise Fail("ERROR: expected " ^ typeToString(INT) ^ ", but got " ^ typeToString(t1))
+                raise Fail("ERROR: expected " ^ typeToString(INT) ^ ", but received " ^ typeToString(t1))
         end
 
 (* <block> ::= "{" <stmtList> "}" *)
@@ -163,7 +163,7 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
             if t1 = BOOL then
                 m
             else
-                raise Fail("ERROR: expected " ^ typeToString(BOOL) ^ ", but got " ^ typeToString(t1))
+                raise Fail("ERROR: expected " ^ typeToString(BOOL) ^ ", but received " ^ typeToString(t1))
         end
 
   | typeCheck( itree(inode("conditional",_),
@@ -185,7 +185,7 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
             if t1 = BOOL then
                 m
             else
-                raise Fail("ERROR: expected " ^ typeToString(BOOL) ^ ", but got " ^ typeToString(t1))
+                raise Fail("ERROR: expected " ^ typeToString(BOOL) ^ ", but received " ^ typeToString(t1))
         end
 
 (* <iteration> ::= "while" "(" <expression> ")" <block>
@@ -205,7 +205,7 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
             if t1 = BOOL then
                 m
             else
-                raise Fail("ERROR: expected " ^ typeToString(BOOL) ^ ", but got " ^ typeToString(t1))
+                raise Fail("ERROR: expected " ^ typeToString(BOOL) ^ ", but received " ^ typeToString(t1))
         end
 
   | typeCheck( itree(inode("iteration",_),
@@ -227,7 +227,7 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
             if t1 = BOOL then
                 m
             else
-                raise Fail("ERROR: expected " ^ typeToString(BOOL) ^ ", but got " ^ typeToString(t1))
+                raise Fail("ERROR: expected " ^ typeToString(BOOL) ^ ", but received " ^ typeToString(t1))
         end
 
 (* <loopIncrement> ::= <assign> | <increment> *)
@@ -249,7 +249,7 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
             if t1 = INT then
                 m
             else
-                raise Fail("ERROR: expected " ^ typeToString(INT) ^ ", but got " ^ typeToString(t1))
+                raise Fail("ERROR: expected " ^ typeToString(INT) ^ ", but received " ^ typeToString(t1))
         end
 
   | typeCheck( itree(inode(x_root,_), children),_) = raise General.Fail("\n\nIn typeCheck root = " ^ x_root ^ "\n\n")
