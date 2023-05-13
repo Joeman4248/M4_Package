@@ -96,6 +96,8 @@ fun dvToBool(Boolean b) = b
 fun dvToInt(Integer i) = i
   | dvToInt(Boolean _) = raise Fail("Denotatable value is not an Integer")
 
+fun dvToString(Integer v) = Int.toString(v)
+  | dvToString(Boolean v) = Bool.toString(v)
 
 (* fun envToString(env) *)
 
