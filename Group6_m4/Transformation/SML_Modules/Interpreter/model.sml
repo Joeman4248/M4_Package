@@ -85,11 +85,26 @@ fun updateStore( loc1, v1, (env, loc, store) ) =
                if (loc1 = loc2) then 
                   (loc1, v1)::store          (* replace existing entry *)
                else
-                  (loc2, v2)::store
+                  (loc2, v2)::new_store(store)
       in
          (env, loc, new_store(store))
       end
 
+(* valueToString: Converts a user-defined value of type 'int' or 'bool' to a string *)
+fun valueToString(Integer v) = Int.toString(v)
+  | valueToString(Boolean v) = Boolean.toString(v)
+
+fun typeToString(t) = if t = INT then "int" else "bool"
+
+(* fun envToString(env) *)
+
+(* fun storeToString(store) *)
+
+(* fun printEnv(env) *)
+
+(* fun printStore(store) *)
+
+(* fun printModel(model) *)
 
 (* =========================================================================================================== *)
 end; (* struct *) 

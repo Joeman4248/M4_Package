@@ -11,13 +11,6 @@ M([[ output      ]], m0) = M(output, m0)
 M([[ conditional ]], m0) = M(conditional, m0) 
 M([[ iteration   ]], m0) = M(iteration, m0) 
 
-M([[ { stmtList } ]], (env0, s0)) =  
-    let 
-        val (env1, s1) = M(stmtList, (env0, s0)) 
-    in 
-        (env0, s1) 
-    end 
-
 M([[ int  id ]], m0) = updateEnv(id, int,  new(), m0) 
 
 M([[ bool id ]], m0) = updateEnv(id, bool, new(), m0) 
@@ -29,12 +22,19 @@ M([[ id = expression ]], m0) =
         updateStore(getLoc(accessEnv(id, m1)), v1, m1) 
     end 
 
-M([[ print(expression) ]]) = 
+M([[ print(expression) ]], m0) = 
     let 
         val (v1, m1) = E'(expression, m0) 
     in 
         print(v1) 
         m1 
+    end 
+
+M([[ { stmtList } ]], (env0, s0)) =  
+    let 
+        val (env1, s1) = M(stmtList, (env0, s0)) 
+    in 
+        (env0, s1) 
     end 
 
 M([[ if (expression) block ]], m0) =  

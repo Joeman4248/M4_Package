@@ -88,23 +88,11 @@ fun M( itree( inode("stmtList",_), [ itree(inode("",_), []) ] ), m ) = m
             | <block>
             | <conditional> 
             | <iteration> *)
-fun M( itree( inode("stmt"_), [ declare
-                                itree(inode(";",_), []) ] ), m) = M(declare, m)
+fun M( itree( inode("stmt"_), [ child,
+                                itree(inode(";",_), []) ] ), m) = M(child, m)
 
-  | M( itree( inode("stmt"_), [ assign
-                                itree(inode(";",_), []) ] ), m) = M(assign, m)
+  | M( itree( inode("stmt"_), [ child ] ), m) = M(child, m)
 
-  | M( itree( inode("stmt"_), [ initialize
-                                itree(inode(";",_), []) ] ), m) = M(initialize, m)
-
-  | M( itree( inode("stmt"_), [ output
-                                itree(inode(";",_), []) ] ), m) = M(output, m)
-
-  | M( itree( inode("stmt"_), [ block ] ), m) = M(block, m)
-
-  | M( itree( inode("stmt"_), [ conditional ] ), m) = M(conditional, m)
-
-  | M( itree( inode("stmt"_), [ iteration ] ), m) = M(iteration, m)
 
 (* <declare> ::= "int"  id
                | "bool" id *)
@@ -112,16 +100,83 @@ fun M( itree( inode("stmt"_), [ declare
 (* <assign> ::= id "=" <expression> *)
 
 (* <output> ::= "print" "(" <expression> ")" *)
+fun M( itree(inode("output",_),
+        [
+            itree(inode("print",_), [] ),
+            itree(inode("(",_), [] ),
+            expression,
+            itree(inode(")",_), [] )
+        ]
+    ), m) = let
+                val (v1, m1) = E(expression, m)
+            in
+                print(valueToString(v1))
+                m1
+            end
 
 (* <block> ::= "{" <stmtList> "}" *)
+fun M( itree(inode("block",_),
+        [
+            itree(inode("{",_), [] ),
+            stmtList,
+            itree(inode("}",_), [] )
+        ]
+    ), m) = let
+                val (env0, s0) = m
+                val (env1, s1) = M(stmtList, m)
+                val m2 = (env0, s1)
+            in
+                m2
+            end
 
 (* <conditional> ::= "if" "(" <expression> ")" <block> 
                    | "if" "(" <expression> ")" <block> "else" <block> *)
+fun M( itree(inode("conditional",_),
+        [
+            itree(inode("if",_), [] ),
+            itree(inode("(",_), [] ),
+            expression,
+            itree(inode(")",_), [] ),
+            block
+        ]
+    ), m) = let
+                val (cond, m1) = E(expression, m)
+            in
+                if cond then
+                    M(block, m1)
+                else
+                    m1
+            end
+
+  | M( itree(inode("conditional",_),
+        [
+            itree(inode("if",_), [] ),
+            itree(inode("(",_), [] ),
+            expression,
+            itree(inode(")",_), [] ),
+            block1
+            itree(inode("else",_), [] ),
+            block2
+        ]
+    ), m) = let
+                val (cond, m1) = E(expression, m)
+            in
+                if cond then
+                    M(block1, m1)
+                else
+                    M(block2, m2)
+            end
+
 
 (* <iteration> ::= "while" "(" <expression> ")" <block> 
                  | "for" "(" <assign> ";" <expression> ";" <loopIncrement> ")" <block> *)
 
+
+
+
+
 (* <loopIncrement> ::= <assign> | <increment> *)
+fun M( itree( inode("loopIncrement"_), [ child ] ), m) = M(child, m)
 
 (* ---------- Boolean Expressions ---------- *)
 
