@@ -643,18 +643,17 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
 (* <loopIncrement> ::= <assign> | <increment> *)
   | M( itree( inode("loopIncrement",_),
             [
-                assign as itree( inode("assign",_), [ _ ] )
+                itree( inode("assign",_), [ assign ] )
             ]
         ), m
     ) = M(assign, m)
 
   | M( itree( inode("loopIncrement",_),
             [
-                increment as itree( inode("increment",_), [ _ ] )
+                itree( inode("increment",_), [ increment ] )
             ]
         ), m
-    ) =
-        let
+    ) = let
             val (v1, m1) = E(increment, m)
         in
             m1

@@ -104,15 +104,13 @@ fun typeToString(t) =
     else if t = BOOL then "boolean"
     else                  "ERROR"
 
-fun envToString(id, t, loc) = (
-        print("id: " ^ id ^
-              " type: " ^ typeToString(t) ^
-              " location: " ^ Int.toString(loc) ^ "\n")
-    )
+fun envToString(id, t, loc) =
+    "id: " ^ id ^
+    " type: " ^ typeToString(t) ^
+    " location: " ^ Int.toString(loc) ^ "\n"
 
-fun storeToString(loc, v) = (
-        print(Int.toString(loc) ^ ": " ^ dvToString(v) ^ "\n")
-    )
+fun storeToString(loc, v) =
+    Int.toString(loc) ^ ": " ^ dvToString(v) ^ "\n"
 
 fun printEnv([]) = ()
   | printEnv(e::env) = (
@@ -128,10 +126,10 @@ fun printStore([]) = ()
 
 fun printModel(env, loc, store) = (
         print("\n------------MODEL------------\n");
-        print("Address counter = (" ^ Int.toString(loc) ^ ")\n")
+        print("Address counter = (" ^ Int.toString(loc) ^ ")\n");
         print("\nEnvironment:\n\n");
         printEnv(env);
-        print("\n-----------------------------\n")
+        print("\n-----------------------------\n");
         print("\nStore:\n\n");
         printStore(store);
         print("\n-----------------------------\n")
