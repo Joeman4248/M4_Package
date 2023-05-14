@@ -31,10 +31,9 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
             val t2 = typeOf(conjunction, m)
         in
             if t1 = BOOL andalso t2 = BOOL then
-                m
+                BOOL
             else
-                raise Fail("ERROR: bad operand types for binary operator \'|| " ^
-                            typeToString(t1) ^ " and " ^ typeToString(t2))
+                ERROR
         end
 
   | typeOf( itree(inode("disjunction",_), [ conjunction ]), m ) = typeOf(conjunction, m)
@@ -53,10 +52,9 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
             val t2 = typeOf(equality, m)
         in
             if t1 = BOOL andalso t2 = BOOL then
-                m
+                BOOL
             else
-                raise Fail("ERROR: bad operand types for binary operator \'&& " ^
-                            typeToString(t1) ^ " and " ^ typeToString(t2))
+                ERROR
         end
 
   | typeOf( itree(inode("conjunction",_), [ equality ]), m ) = typeOf(equality, m)
@@ -76,9 +74,9 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
             val t2 = typeOf(relational, m)
         in
             if t1 = t2
-                m
+                BOOL
             else
-                raise Fail("ERROR: incomparable types: " ^ typeToString(t1) ^ " and " ^ typeToString(t2))
+                ERROR
         end
 
   | typeOf( itree(inode("equality",_),
@@ -93,10 +91,11 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
             val t2 = typeOf(relational, m)
         in
             if t1 = t2
-                m
+                BOOL
             else
-                raise Fail("ERROR: incomparable types: " ^ typeToString(t1) ^ " and " ^ typeToString(t2))
+                ERROR
         end
+
   | typeOf( itree(inode("equality",_), [ relational ]), m ) = typeOf(relational, m)
 
 (* <relational> ::= <relational> "<" <additive>
@@ -104,10 +103,114 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
                   | <relational> "<=" <additive>
                   | <relational> ">=" <additive>
                   | <additive> *)
+  | typeOf( itree(inode("relational",_),
+            [
+                relational,
+                itree(inode("<",_), [] ),
+                additive
+            ]
+        ), m
+    ) = let
+            val t1 = typeOf(relational, m)
+            val t2 = typeOf(additive, m)
+        in
+            if t1 = INT andalso t2 = INT then
+                BOOL
+            else
+                ERROR
+        end
+
+  | typeOf( itree(inode("relational",_),
+            [
+                relational,
+                itree(inode(">",_), [] ),
+                additive
+            ]
+        ), m
+    ) = let
+            val t1 = typeOf(relational, m)
+            val t2 = typeOf(additive, m)
+        in
+            if t1 = INT andalso t2 = INT then
+                BOOL
+            else
+                ERROR
+        end
+
+  | typeOf( itree(inode("relational",_),
+            [
+                relational,
+                itree(inode("<=",_), [] ),
+                additive
+            ]
+        ), m
+    ) = let
+            val t1 = typeOf(relational, m)
+            val t2 = typeOf(additive, m)
+        in
+            if t1 = INT andalso t2 = INT then
+                BOOL
+            else
+                ERROR
+        end
+
+  | typeOf( itree(inode("relational",_),
+            [
+                relational,
+                itree(inode(">=",_), [] ),
+                additive
+            ]
+        ), m
+    ) = let
+            val t1 = typeOf(relational, m)
+            val t2 = typeOf(additive, m)
+        in
+            if t1 = INT andalso t2 = INT then
+                BOOL
+            else
+                ERROR
+        end
+
+  | typeOf( itree(inode("relational",_), [ additive ]), m ) = typeOf(additive, m)
 
 (* <additive> ::= <additive> "+" <multiplicative>
                 | <additive> "-" <multiplicative>
                 | <multiplicative> *)
+  | typeOf( itree(inode("additive",_),
+            [
+                additive,
+                itree(inode("+",_), [] ),
+                multiplicative
+            ]
+        ), m
+    ) = let
+            val t1 = typeOf(additive, m)
+            val t2 = typeOf(multiplicative, m)
+        in
+            if t1 = INT andalso t2 = INT then
+                INT
+            else
+                ERROR
+        end
+
+  | typeOf( itree(inode("additive",_),
+            [
+                additive,
+                itree(inode("-",_), [] ),
+                multiplicative
+            ]
+        ), m
+    ) = let
+            val t1 = typeOf(additive, m)
+            val t2 = typeOf(multiplicative, m)
+        in
+            if t1 = INT andalso t2 = INT then
+                INT
+            else
+                ERROR
+        end
+
+  | typeOf( itree(inode("additive",_), [ multiplicative ]), m ) = typeOf(multiplicative, m)
 
 (* <multiplicative> ::= <multiplicative> "*" <negation>
                       | <multiplicative> "/" <negation>
