@@ -104,15 +104,38 @@ fun typeToString(t) =
     else if t = BOOL then "boolean"
     else                  "ERROR"
 
-(* fun envToString(id, t, loc) *)
+fun envToString(id, t, loc) = (
+        print("id: " ^ id ^
+              " type: " ^ typeToString(t) ^
+              " location: " ^ Int.toString(loc) ^ "\n")
+    )
 
-(* fun storeToString(loc, v) *)
+fun storeToString(loc, v) = (
+        print(Int.toString(loc) ^ ": " ^ dvToString(v) ^ "\n")
+    )
 
-(* fun printEnv(e::env) *)
+fun printEnv([]) = ()
+  | printEnv(e::env) = (
+        print(envToString(e));
+        printEnv(env)
+    )
 
-(* fun printStore(s::store) *)
+fun printStore([]) = ()
+  | printStore(s::store) = (
+        print(storeToString(s));
+        printStore(store)
+    )
 
-(* fun printModel(env, loc, store) *)
+fun printModel(env, loc, store) = (
+        print("\n------------MODEL------------\n");
+        print("Address counter = (" ^ Int.toString(loc) ^ ")\n")
+        print("\nEnvironment:\n\n");
+        printEnv(env);
+        print("\n-----------------------------\n")
+        print("\nStore:\n\n");
+        printStore(store);
+        print("\n-----------------------------\n")
+    )
 
 (* =========================================================================================================== *)
 end; (* struct *)
