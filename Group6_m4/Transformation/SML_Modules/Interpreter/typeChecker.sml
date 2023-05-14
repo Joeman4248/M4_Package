@@ -272,6 +272,37 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
 (* <negation> ::= "!" <negation>
                 | "~" <negation>
                 | <exponent> *)
+  | typeOf( itree(inode("negation",_),
+            [
+                itree(inode("~",_), [] ),
+                negation
+            ]
+        ), m
+    ) = let
+            val t1 = typeOf(negation, m)
+        in
+            if t1 = INT then
+                INT
+            else
+                ERROR
+        end
+
+  | typeOf( itree(inode("negation",_),
+            [
+                itree(inode("!",_), [] ),
+                negation
+            ]
+        ), m
+    ) = let
+            val t1 = typeOf(negation, m)
+        in
+            if t1 = BOOL then
+                BOOL
+            else
+                ERROR
+        end
+
+  | typeOf( itree(inode("negation",_), [ exponent ]), m ) = typeOf(exponent, m)
 
 (* <exponent> ::= <absolute> "^" <exponent>
                 | <absolute> *)
