@@ -513,7 +513,7 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
 
   | M( itree(inode("assign",_), [ increment ]), m) =
         let
-            val (v1, m1) = E(increment)
+            val (v1, m1) = E(increment, m)
         in
             m1
         end

@@ -24,7 +24,7 @@ prog
 <declare> ::= "int"  id
             | "bool" id .
 
-<assign> ::= id "=" <expression> .
+<assign> ::= id "=" <expression> | <increment>.
 
 <output> ::= "print" "(" <expression> ")" .
 
@@ -34,9 +34,7 @@ prog
                 | "if" "(" <expression> ")" <block> "else" <block> .
 
 <iteration> ::= "while" "(" <expression> ")" <block>
-              | "for" "(" <assign> ";" <expression> ";" <loopIncrement> ")" <block> .
-
-<loopIncrement> ::= <assign> | <increment> .
+              | "for" "(" <assign> ";" <expression> ";" <assign> ")" <block> .
 
 (* Boolean Expressions *)
 

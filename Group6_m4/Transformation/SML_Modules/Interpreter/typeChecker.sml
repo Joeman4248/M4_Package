@@ -487,7 +487,7 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
                 raise Fail("ERROR: cannot assign " ^ typeToString(t1) ^ " to variable of type: " ^ typeToString(t2))
         end
 
-  | typeCheck( itree( inode("assign",_), [ itree( inode("increment",_), [ increment ] ) ]), m) =
+  | typeCheck( itree( inode("assign",_), [ increment ]), m) =
         let
             val t1 = typeOf(increment, m)
         in
@@ -573,7 +573,7 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
         end
 
 (* <iteration> ::= "while" "(" <expression> ")" <block>
-                 | "for" "(" <assign> ";" <expression> ";" <loopIncrement> ")" <block> *)
+                 | "for" "(" <assign> ";" <expression> ";" <assign> ")" <block> *)
   | typeCheck( itree(inode("iteration",_),
             [
                 itree(inode("while",_), [] ),

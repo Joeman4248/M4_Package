@@ -105,12 +105,10 @@ fun typeToString(t) =
     else                  "ERROR"
 
 fun envToString(id, t, loc) =
-    "id: " ^ id ^
-    " type: " ^ typeToString(t) ^
-    " location: " ^ Int.toString(loc) ^ "\n"
+    "\t(" ^ id ^ ", " ^ Int.toString(loc) ^ ", " ^ typeToString(t) ^ ")\n"
 
 fun storeToString(loc, v) =
-    Int.toString(loc) ^ ": " ^ dvToString(v) ^ "\n"
+    "\t(" ^ Int.toString(loc) ^ ", " ^ dvToString(v) ^ ")\n"
 
 fun printEnv([]) = ()
   | printEnv(e::env) = (
@@ -127,10 +125,9 @@ fun printStore([]) = ()
 fun printModel(env, loc, store) = (
         print("\n------------MODEL------------\n");
         print("Address counter = (" ^ Int.toString(loc) ^ ")\n");
-        print("\nEnvironment:\n\n");
+        print("Environment: (id, type, location):\n");
         printEnv(env);
-        print("\n-----------------------------\n");
-        print("\nStore:\n\n");
+        print("\nStore: (location, value):\n");
         printStore(store);
         print("\n-----------------------------\n")
     )
