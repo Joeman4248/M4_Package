@@ -496,7 +496,7 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
 
   | M( itree(inode("declare",_), [ itree(inode("bool",_), [] ), id ]), m) = updateEnv(getLeaf(id), BOOL, m)
 
-(* <assign> ::= id "=" <expression> *)
+(* <assign> ::= id "=" <expression> | <increment> *)
   | M( itree(inode("assign",_),
             [
                 id,
@@ -509,6 +509,13 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
         in
             (* updateStore( location, value, model ) *)
             updateStore(getLoc(accessEnv(getLeaf(id), m1)), v1, m1)
+        end
+
+  | M( itree(inode("assign",_), [ increment ]), m) =
+        let
+            val (v1, m1) = E(increment)
+        in
+            m1
         end
 
 (* <output> ::= "print" "(" <expression> ")" *)
@@ -613,15 +620,15 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
   | M( itree(inode("iteration",_),
             [
                 itree(inode("for",_), [] ),
-                itree(inode("(",_), [] ), assign,
+                itree(inode("(",_), [] ), assign1,
                 itree(inode(";",_), [] ), expression,
-                itree(inode(";",_), [] ), loopIncrement,
+                itree(inode(";",_), [] ), assign2,
                 itree(inode(")",_), [] ), block
             ]
         ), m
     ) = let
-            val m1 = M(assign, m)
-            fun forLoopHelper(expression, block, loopIncrement, m) =
+            val m1 = M(assign1, m)
+            fun forLoopHelper(expression, block, assign2, m) =
                 let
                     val (v1, m1) = E(expression, m)
                     val cond = dvToBool(v1)
@@ -629,34 +636,15 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
                     if cond then
                         let
                             val m2 = M(block, m1)
-                            val m3 = M(loopIncrement, m2)
+                            val m3 = M(assign2, m2)
                         in
-                            forLoopHelper(expression, block, loopIncrement, m3)
+                            forLoopHelper(expression, block, assign2, m3)
                         end
                     else
                         m1
                 end
         in
-            forLoopHelper(expression, block, loopIncrement, m)
-        end
-
-(* <loopIncrement> ::= <assign> | <increment> *)
-  | M( itree( inode("loopIncrement",_),
-            [
-                itree( inode("assign",_), [ assign ] )
-            ]
-        ), m
-    ) = M(assign, m)
-
-  | M( itree( inode("loopIncrement",_),
-            [
-                itree( inode("increment",_), [ increment ] )
-            ]
-        ), m
-    ) = let
-            val (v1, m1) = E(increment, m)
-        in
-            m1
+            forLoopHelper(expression, block, assign2, m)
         end
 
   | M( itree(inode(x_root,_), children),_) = raise General.Fail("\n\nIn M root = " ^ x_root ^ "\n\n")

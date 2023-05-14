@@ -469,7 +469,7 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
   | typeCheck( itree( inode("declare",_),
         [ itree(inode("bool",_), []), id ] ), m ) = updateEnv(getLeaf(id), BOOL, m)
 
-(* <assign> ::= id "=" <expression> *)
+(* <assign> ::= id "=" <expression> | <increment> *)
   | typeCheck( itree( inode("assign",_),
             [
                 id,
@@ -485,6 +485,16 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
                 m
             else
                 raise Fail("ERROR: cannot assign " ^ typeToString(t1) ^ " to variable of type: " ^ typeToString(t2))
+        end
+
+  | typeCheck( itree( inode("assign",_), [ itree( inode("increment",_), [ increment ] ) ]), m) =
+        let
+            val t1 = typeOf(increment, m)
+        in
+            if t1 = INT then
+                m
+            else
+                raise Fail("ERROR: expected " ^ typeToString(INT) ^ ", but got " ^ typeToString(t1))
         end
 
 (* <output> ::= "print" "(" <expression> ")" *)
@@ -585,44 +595,22 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
   | typeCheck( itree(inode("iteration",_),
             [
                 itree(inode("for",_), [] ),
-                itree(inode("(",_), [] ), assign,
+                itree(inode("(",_), [] ), assign1,
                 itree(inode(";",_), [] ), expression,
-                itree(inode(";",_), [] ), loopIncrement,
+                itree(inode(";",_), [] ), assign2,
                 itree(inode(")",_), [] ), block
             ]
         ), m
     ) = let
-            val m1 = typeCheck(assign, m)
+            val m1 = typeCheck(assign1, m)
             val t1 = typeOf(expression, m1)
             val m2 = typeCheck(block, m1)
-            val m3 = typeCheck(loopIncrement, m2)
+            val m3 = typeCheck(assign2, m2)
         in
             if t1 = BOOL then
                 m
             else
                 raise Fail("ERROR: expected " ^ typeToString(BOOL) ^ ", but got " ^ typeToString(t1))
-        end
-
-(* <loopIncrement> ::= <assign> | <increment> *)
-  | typeCheck( itree( inode("loopIncrement",_),
-            [
-                itree( inode("assign",_), [ assign ] )
-            ]
-        ), m
-    ) = typeCheck(assign, m)
-
-  | typeCheck( itree( inode("loopIncrement",_),
-            [
-                itree( inode("increment",_), [ increment ] )
-            ]
-        ), m
-    ) = let
-            val t1 = typeOf(increment, m)
-        in
-            if t1 = INT then
-                m
-            else
-                raise Fail("ERROR: expected " ^ typeToString(INT) ^ ", but got " ^ typeToString(t1))
         end
 
   | typeCheck( itree(inode(x_root,_), children),_) = raise General.Fail("\n\nIn typeCheck root = " ^ x_root ^ "\n\n")
