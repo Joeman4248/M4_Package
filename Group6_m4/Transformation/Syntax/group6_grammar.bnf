@@ -14,12 +14,11 @@ prog
 
 <stmtList> ::= <stmt> <stmtList> | .
 
-<stmt> ::= <block> 
-         | <declare> ";" 
-         | <assign> ";" 
-         | <initialize> ";"
-         | <output> ";" 
-         | <conditional> 
+<stmt> ::= <block>
+         | <declare> ";"
+         | <assign> ";"
+         | <output> ";"
+         | <conditional>
          | <iteration> .
 
 <declare> ::= "int"  id
@@ -31,10 +30,10 @@ prog
 
 <block> ::= "{" <stmtList> "}" .
 
-<conditional> ::= "if" "(" <expression> ")" <block> 
+<conditional> ::= "if" "(" <expression> ")" <block>
                 | "if" "(" <expression> ")" <block> "else" <block> .
 
-<iteration> ::= "while" "(" <expression> ")" <block> 
+<iteration> ::= "while" "(" <expression> ")" <block>
               | "for" "(" <assign> ";" <expression> ";" <loopIncrement> ")" <block> .
 
 <loopIncrement> ::= <assign> | <increment> .
@@ -43,47 +42,47 @@ prog
 
 <expression> ::= <disjunction> .
 
-<disjunction> ::= <disjunction> "||" <conjunction> 
+<disjunction> ::= <disjunction> "||" <conjunction>
                 | <conjunction> .
 
-<conjunction> ::= <conjunction> "&&" <equality> 
+<conjunction> ::= <conjunction> "&&" <equality>
                 | <equality> .
 
-<equality> ::= <equality> "==" <relational> 
-             | <equality> "!=" <relational> 
+<equality> ::= <equality> "==" <relational>
+             | <equality> "!=" <relational>
              | <relational> .
 
-<relational> ::= <relational> "<" <additive> 
-               | <relational> ">" <additive> 
-               | <relational> "<=" <additive> 
-               | <relational> ">=" <additive> 
+<relational> ::= <relational> "<" <additive>
+               | <relational> ">" <additive>
+               | <relational> "<=" <additive>
+               | <relational> ">=" <additive>
                | <additive> .
 
 (* Integer Expressions *)
 
-<additive> ::= <additive> "+" <multiplicative> 
-             | <additive> "-" <multiplicative> 
+<additive> ::= <additive> "+" <multiplicative>
+             | <additive> "-" <multiplicative>
              | <multiplicative> .
 
-<multiplicative> ::= <multiplicative> "*" <negation> 
-                   | <multiplicative> "/" <negation> 
-                   | <multiplicative> "%" <negation> 
+<multiplicative> ::= <multiplicative> "*" <negation>
+                   | <multiplicative> "/" <negation>
+                   | <multiplicative> "%" <negation>
                    | <negation> .
 
-<negation> ::= "!" <negation> 
-             | "~" <negation> 
+<negation> ::= "!" <negation>
+             | "~" <negation>
              | <exponent> .
 
-<exponent> ::= <absolute> "^" <exponent> 
+<exponent> ::= <absolute> "^" <exponent>
              | <absolute> .
 
-<absolute> ::= "abs" "(" <expression> ")" 
+<absolute> ::= "abs" "(" <expression> ")"
              | <base> .
 
 <base> ::= id | boolean | integer
          | "(" <expression> ")" | <increment> .
 
-<increment> ::= id "++" 
-              | id "--" 
-              | "++" id 
+<increment> ::= id "++"
+              | id "--"
+              | "++" id
               | "--" id .

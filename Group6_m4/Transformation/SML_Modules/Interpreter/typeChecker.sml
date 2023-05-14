@@ -606,14 +606,14 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
 (* <loopIncrement> ::= <assign> | <increment> *)
   | typeCheck( itree( inode("loopIncrement",_),
             [
-                assign as itree( inode("assign",_), [ _ ] )
+                itree( inode("assign",_), [ assign ] )
             ]
         ), m
     ) = typeCheck(assign, m)
 
   | typeCheck( itree( inode("loopIncrement",_),
             [
-                increment as itree( inode("increment",_), [ _ ] )
+                itree( inode("increment",_), [ increment ] )
             ]
         ), m
     ) = let
