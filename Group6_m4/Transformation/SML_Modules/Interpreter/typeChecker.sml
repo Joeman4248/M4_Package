@@ -40,7 +40,7 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
   | typeOf( itree(inode("disjunction",_), [ conjunction ]), m ) = typeOf(conjunction, m)
 
 (* <conjunction> ::= <conjunction> "&&" <equality>
-                | <equality> *)
+                   | <equality> *)
 
 (* <equality> ::= <equality> "==" <relational>
                 | <equality> "!=" <relational>
