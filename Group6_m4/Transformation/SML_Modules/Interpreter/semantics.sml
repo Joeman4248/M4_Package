@@ -62,10 +62,6 @@ open CONCRETE_REPRESENTATION;
             (3) the second child is a semi-colon
 *)
 
-(******* Exponent helper function *******)
-fun exp(x, 0) = 1
-  | exp(x, y) = x * exp(x, y - 1)
-
 (* ---------- Expressions ---------- *)
 
 (* <expression> ::= <disjunction> *)
@@ -353,6 +349,9 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
             ]
         ), m
     ) = let
+            fun exp(x, 0) = 1
+              | exp(x, y) = x * exp(x, y - 1)
+
             val (v1, m1) = E(absolute, m)
             val (v2, m2) = E(exponent, m1)
             val term1 = dvToInt(v1)
@@ -447,7 +446,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
             (value, m)
         end
 
-  | E( itree(inode("boolean",_), [ itree(inode("true",_), []) ]), m) = (Boolean true, m)
+  | E( itree(inode("boolean",_), [ itree(inode("true",_), [])  ]), m) = (Boolean true,  m)
 
   | E( itree(inode("boolean",_), [ itree(inode("false",_), []) ]), m) = (Boolean false, m)
 

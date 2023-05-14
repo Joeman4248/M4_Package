@@ -44,7 +44,7 @@ fun getLoc (id, t, loc) = loc
 fun getType(id, t, loc) = t
 
 (* accessEnv: identifier * model → environment *)
-fun accessEnv( id1, ([], _, _) ) = raise Fail("ERROR:" ^ id1 ^ "is undeclared in this scope!")
+fun accessEnv( id1, ([], _, _) ) = raise Fail("ERROR: " ^ id1 ^ " is undeclared in this scope!")
   | accessEnv( id1, ((id2, t2, loc2)::env, loc, store)) =
     if (id1 = id2) then
         (id2, t2, loc2)
@@ -105,10 +105,10 @@ fun typeToString(t) =
     else                  "ERROR"
 
 fun envToString(id, t, loc) =
-    "    (" ^ id ^ ", " ^ Int.toString(loc) ^ ", " ^ typeToString(t) ^ ")\n"
+    "(" ^ typeToString(t) ^ ", " ^ Int.toString(loc) ^ ", " ^ id ^ ")\n"
 
 fun storeToString(loc, v) =
-    "    (" ^ Int.toString(loc) ^ ", " ^ dvToString(v) ^ ")\n"
+    "(" ^ Int.toString(loc) ^ ", " ^ dvToString(v) ^ ")\n"
 
 fun printEnv([]) = ()
   | printEnv(e::env) = (
@@ -125,9 +125,9 @@ fun printStore([]) = ()
 fun printModel(env, loc, store) = (
         print("\n------------MODEL------------\n");
         print("Address counter = (" ^ Int.toString(loc) ^ ")\n");
-        print("Environment: (id, type, location):\n");
+        print("Environment (type, location, id):\n");
         printEnv(env);
-        print("\nStore: (location, value):\n");
+        print("\nStore (location, value):\n");
         printStore(store);
         print("\n-----------------------------\n")
     )
