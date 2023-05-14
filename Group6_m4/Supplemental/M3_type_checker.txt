@@ -131,7 +131,7 @@ typeOf([[ equality == relational ]], m0) =
             val t1 = typeOf(equality, m0)
             val t2 = typeOf(relational, m0)
       in
-            if t1 = t2 andalso t1 <> ERROR then
+            if t1 <> ERROR andalso t1 = t2 then
                   BOOL
             else
                   ERROR
@@ -142,7 +142,7 @@ typeOf([[ equality != relational ]], m0) =
             val t1 = typeOf(equality, m0)
             val t2 = typeOf(relational, m0)
       in
-            if t1 = t2 andalso t1 <> ERROR then
+            if t1 <> ERROR andalso t1 = t2 then
                   BOOL
             else
                   ERROR
@@ -290,7 +290,7 @@ typeOf([[ absolute ^ exponent ]], m0) =
 
 typeOf([[ absolute ]], m0) = typeOf(absolute, m0)
 
-typeOf([[ abs( absolute ) ]], m0) =
+typeOf([[ abs( expression ) ]], m0) =
       let
             val t1 = typeOf(absolute, m0)
       in

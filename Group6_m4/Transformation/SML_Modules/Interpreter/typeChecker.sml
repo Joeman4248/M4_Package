@@ -40,7 +40,7 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
 
 (* <conjunction> ::= <conjunction> "&&" <equality>
                    | <equality> *)
-  | typeOf( itree(inode("disjunction",_),
+  | typeOf( itree(inode("conjunction",_),
             [
                 conjunction,
                 itree(inode("&&",_), [] ),
@@ -274,21 +274,6 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
                 | <exponent> *)
   | typeOf( itree(inode("negation",_),
             [
-                itree(inode("~",_), [] ),
-                negation
-            ]
-        ), m
-    ) = let
-            val t1 = typeOf(negation, m)
-        in
-            if t1 = INT then
-                INT
-            else
-                ERROR
-        end
-
-  | typeOf( itree(inode("negation",_),
-            [
                 itree(inode("!",_), [] ),
                 negation
             ]
@@ -298,6 +283,21 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
         in
             if t1 = BOOL then
                 BOOL
+            else
+                ERROR
+        end
+
+  | typeOf( itree(inode("negation",_),
+            [
+                itree(inode("~",_), [] ),
+                negation
+            ]
+        ), m
+    ) = let
+            val t1 = typeOf(negation, m)
+        in
+            if t1 = INT then
+                INT
             else
                 ERROR
         end
@@ -423,6 +423,16 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
                 ERROR
         end
 
+(* id | boolean | integer *)
+  | typeOf( id as itree(inode("id",_), [ _ ]), m ) = getType(accessEnv(getLeaf(id), m))
+
+  | typeOf( itree(inode("boolean",_), [ _ ]), m) = BOOL
+
+  | typeOf( itree(inode("integer",_), [ _ ]), m) = INT
+
+  | typeOf( itree(inode(x_root,_), children),_) = raise General.Fail("\n\nIn typeCheck root = " ^ x_root ^ "\n\n")
+  | typeOf _ = raise Fail("Error in Model.typeCheck - this should never occur")
+
 (* ---------- Statements ---------- *)
 
 (* <prog> ::= <stmtList> *)
@@ -469,7 +479,7 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
         ), m
     ) = let
             val t1 = typeOf(expression, m)
-            val t2 = getType(accessEnv(getLeaf(id), m), m)
+            val t2 = getType(accessEnv(getLeaf(id), m))
         in
             if t1 = t2 then
                 m
@@ -578,15 +588,14 @@ fun typeCheck( itree(inode("prog",_), [ stmtList ] ), m ) = typeCheck(stmtList, 
                 itree(inode("(",_), [] ), assign,
                 itree(inode(";",_), [] ), expression,
                 itree(inode(";",_), [] ), loopIncrement,
-                itree(inode(")",_), [] ),
-                block
+                itree(inode(")",_), [] ), block
             ]
         ), m
     ) = let
             val m1 = typeCheck(assign, m)
             val t1 = typeOf(expression, m1)
             val m2 = typeCheck(block, m1)
-            val m3 = typeCheck(loopIncrement, m3)
+            val m3 = typeCheck(loopIncrement, m2)
         in
             if t1 = BOOL then
                 m

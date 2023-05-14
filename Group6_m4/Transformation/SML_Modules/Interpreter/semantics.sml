@@ -440,10 +440,9 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
         end
 
 (* id | boolean | integer *)
-  | E( itree(inode("id",_), [ id_name ]), m ) =
+  | E( id as itree(inode("id",_), [ _ ]), m ) =
         let
-            val idStr = getLeaf(id_name)
-            val value = accessStore(getLoc(accessEnv(idStr, m)), m)
+            val value = accessStore(getLoc(accessEnv(getLeaf(id), m)), m)
         in
             (value, m)
         end
@@ -452,9 +451,9 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
 
   | E( itree(inode("boolean",_), [ itree(inode("false",_), []) ]), m) = (Boolean false, m)
 
-  | E( itree(inode("integer",_), [ int_val ]), m) =
+  | E( integer as itree(inode("integer",_), [ _ ]), m) =
         let
-            val value = valOf(Int.fromString(getLeaf(int_val)))
+            val value = valOf(Int.fromString(getLeaf(integer)))
         in
             (Integer value, m)
         end
@@ -618,8 +617,7 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
                 itree(inode("(",_), [] ), assign,
                 itree(inode(";",_), [] ), expression,
                 itree(inode(";",_), [] ), loopIncrement,
-                itree(inode(")",_), [] ),
-                block
+                itree(inode(")",_), [] ), block
             ]
         ), m
     ) = let
