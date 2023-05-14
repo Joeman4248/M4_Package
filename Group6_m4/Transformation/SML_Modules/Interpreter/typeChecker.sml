@@ -306,9 +306,45 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
 
 (* <exponent> ::= <absolute> "^" <exponent>
                 | <absolute> *)
+  | typeOf( itree(inode("exponent",_),
+            [
+                absolute,
+                itree(inode("^",_), [] ),
+                exponent
+            ]
+        ), m
+    ) = let
+            val t1 = typeOf(absolute, m)
+            val t2 = typeOf(exponent, m)
+        in
+            if t1 = INT andalso t1 = INT then
+                INT
+            else
+                ERROR
+        end
+
+  | typeOf( itree(inode("exponent",_), [ absolute ]), m ) = typeOf(absolute, m)
 
 (* <absolute> ::= "abs" "(" <expression> ")"
                 | <base> *)
+  | typeOf( itree(inode("absolute",_),
+            [
+                itree(inode("abs",_), [] ),
+                itree(inode("(",_), [] ),
+                expression
+                itree(inode(")",_), [] ),
+            ]
+        ), m
+    ) = let
+            val t1 = typeOf(expression, m)
+        in
+            if t1 = INT then
+                INT
+            else
+                ERROR
+        end
+
+  | typeOf( itree(inode("absolute",_), [ base ]), m ) = typeOf(base, m)
 
 (* <base> ::= id | boolean | integer
             | "(" <expression> ")" | <increment> *)
