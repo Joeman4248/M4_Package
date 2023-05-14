@@ -216,6 +216,58 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
                       | <multiplicative> "/" <negation>
                       | <multiplicative> "%" <negation>
                       | <negation> *)
+  | typeOf( itree(inode("multiplicative",_),
+            [
+                multiplicative,
+                itree(inode("*",_), [] ),
+                negation
+            ]
+        ), m
+    ) = let
+            val t1 = typeOf(multiplicative, m)
+            val t2 = typeOf(negation, m)
+        in
+            if t1 = INT andalso t2 = INT then
+                INT
+            else
+                ERROR
+        end
+
+  | typeOf( itree(inode("multiplicative",_),
+            [
+                multiplicative,
+                itree(inode("/",_), [] ),
+                negation
+            ]
+        ), m
+    ) = let
+            val t1 = typeOf(multiplicative, m)
+            val t2 = typeOf(negation, m)
+        in
+            if t1 = INT andalso t2 = INT then
+                INT
+            else
+                ERROR
+        end
+
+  | typeOf( itree(inode("multiplicative",_),
+            [
+                multiplicative,
+                itree(inode("%",_), [] ),
+                negation
+            ]
+        ), m
+    ) = let
+            val t1 = typeOf(multiplicative, m)
+            val t2 = typeOf(negation, m)
+        in
+            if t1 = INT andalso t2 = INT then
+                INT
+            else
+                ERROR
+        end
+
+  | typeOf( itree(inode("multiplicative",_), [ negation ]), m ) = typeOf(negation, m)
 
 (* <negation> ::= "!" <negation>
                 | "~" <negation>
