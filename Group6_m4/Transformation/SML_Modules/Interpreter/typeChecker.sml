@@ -33,18 +33,71 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
             if t1 = BOOL andalso t2 = BOOL then
                 m
             else
-                raise Fail("ERROR: expected " ^ typeToString(BOOL) ^ " and " ^ typeToString(BOOL) ^
-                    " but got " ^ typeToString(t1) ^ " and " ^ typeToString(t2))
+                raise Fail("ERROR: bad operand types for binary operator \'|| " ^
+                            typeToString(t1) ^ " and " ^ typeToString(t2))
         end
 
   | typeOf( itree(inode("disjunction",_), [ conjunction ]), m ) = typeOf(conjunction, m)
 
 (* <conjunction> ::= <conjunction> "&&" <equality>
                    | <equality> *)
+  | typeOf( itree(inode("disjunction",_),
+            [
+                conjunction,
+                itree(inode("&&",_), [] ),
+                equality
+            ]
+        ), m
+    ) = let
+            val t1 = typeOf(conjunction, m)
+            val t2 = typeOf(equality, m)
+        in
+            if t1 = BOOL andalso t2 = BOOL then
+                m
+            else
+                raise Fail("ERROR: bad operand types for binary operator \'&& " ^
+                            typeToString(t1) ^ " and " ^ typeToString(t2))
+        end
+
+  | typeOf( itree(inode("conjunction",_), [ equality ]), m ) = typeOf(equality, m)
 
 (* <equality> ::= <equality> "==" <relational>
                 | <equality> "!=" <relational>
                 | <relational> *)
+  | typeOf( itree(inode("equality",_),
+            [
+                equality,
+                itree(inode("==",_), [] ),
+                relational
+            ]
+        ), m
+    ) = let
+            val t1 = typeOf(equality, m)
+            val t2 = typeOf(relational, m)
+        in
+            if t1 = t2
+                m
+            else
+                raise Fail("ERROR: incomparable types: " ^ typeToString(t1) ^ " and " ^ typeToString(t2))
+        end
+
+  | typeOf( itree(inode("equality",_),
+            [
+                equality,
+                itree(inode("!=",_), [] ),
+                relational
+            ]
+        ), m
+    ) = let
+            val t1 = typeOf(equality, m)
+            val t2 = typeOf(relational, m)
+        in
+            if t1 = t2
+                m
+            else
+                raise Fail("ERROR: incomparable types: " ^ typeToString(t1) ^ " and " ^ typeToString(t2))
+        end
+  | typeOf( itree(inode("equality",_), [ relational ]), m ) = typeOf(relational, m)
 
 (* <relational> ::= <relational> "<" <additive>
                   | <relational> ">" <additive>
