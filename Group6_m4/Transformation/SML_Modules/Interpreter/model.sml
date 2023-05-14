@@ -100,15 +100,15 @@ fun dvToString(Integer v) = Int.toString(v)
   | dvToString(Boolean v) = Bool.toString(v)
 
 fun typeToString(t) =
-    if      t = INT  then "integer"
-    else if t = BOOL then "boolean"
+    if      t = INT  then "int"
+    else if t = BOOL then "bool"
     else                  "ERROR"
 
 fun envToString(id, t, loc) =
-    "\t(" ^ id ^ ", " ^ Int.toString(loc) ^ ", " ^ typeToString(t) ^ ")\n"
+    "    (" ^ id ^ ", " ^ Int.toString(loc) ^ ", " ^ typeToString(t) ^ ")\n"
 
 fun storeToString(loc, v) =
-    "\t(" ^ Int.toString(loc) ^ ", " ^ dvToString(v) ^ ")\n"
+    "    (" ^ Int.toString(loc) ^ ", " ^ dvToString(v) ^ ")\n"
 
 fun printEnv([]) = ()
   | printEnv(e::env) = (
