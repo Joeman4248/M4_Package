@@ -49,7 +49,6 @@ open CONCRETE_REPRESENTATION;
                     [
                         stmt,                       (* this is a regular variable in SML and has no other special meaning *)
                         itree(inode(";",_), [] ),   (* A semi-colon is a leaf node. All leaf nodes have an empty children list. *)
-
                         stmtList                    (* this is a regular variable in SML and has no other special meaning *)
                     ]
                 ),
