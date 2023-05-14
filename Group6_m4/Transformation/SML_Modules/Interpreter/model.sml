@@ -83,7 +83,7 @@ fun updateStore( loc1, v1, (env, loc, store) ) =
         fun new_store([]) = [(loc1, v1)]    (* add new entry *)
             | new_store((loc2, v2)::store) =
                 if (loc1 = loc2) then
-                (loc1, v1)::store          (* replace existing entry *)
+                (loc1, v1)::store           (* replace existing entry *)
                 else
                 (loc2, v2)::new_store(store)
     in
@@ -100,19 +100,19 @@ fun dvToString(Integer v) = Int.toString(v)
   | dvToString(Boolean v) = Bool.toString(v)
 
 fun typeToString(t) =
-    if t = INT then       "integer"
+    if      t = INT  then "integer"
     else if t = BOOL then "boolean"
     else                  "ERROR"
 
-(* fun envToString(env) *)
+(* fun envToString(id, t, loc) *)
 
-(* fun storeToString(store) *)
+(* fun storeToString(loc, v) *)
 
-(* fun printEnv(env) *)
+(* fun printEnv(e::env) *)
 
-(* fun printStore(store) *)
+(* fun printStore(s::store) *)
 
-(* fun printModel(model) *)
+(* fun printModel(env, loc, store) *)
 
 (* =========================================================================================================== *)
 end; (* struct *)

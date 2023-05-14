@@ -430,7 +430,7 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
 
   | typeOf( itree(inode("integer",_), [ _ ]), m) = INT
 
-  | typeOf( itree(inode(x_root,_), children),_) = raise General.Fail("\n\nIn typeCheck root = " ^ x_root ^ "\n\n")
+  | typeOf( itree(inode(x_root,_), children),_) = raise General.Fail("\n\nIn typeOf root = " ^ x_root ^ "\n\n")
   | typeOf _ = raise Fail("Error in Model.typeCheck - this should never occur")
 
 (* ---------- Statements ---------- *)
