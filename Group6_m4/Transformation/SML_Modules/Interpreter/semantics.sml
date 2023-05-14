@@ -587,7 +587,6 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
                 M(block2, m1)
         end
 
-
 (* <iteration> ::= "while" "(" <expression> ")" <block>
                  | "for" "(" <assign> ";" <expression> ";" <loopIncrement> ")" <block> *)
   | M( itree(inode("iteration",_),
