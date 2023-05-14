@@ -505,11 +505,10 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
             ]
         ), m
     ) = let
-            val idStr = getLeaf(id)
             val (v1, m1) = E(expression, m)
         in
             (* updateStore( location, value, model ) *)
-            updateStore(getLoc(accessEnv(idStr, m1)), v1, m1)
+            updateStore(getLoc(accessEnv(getLeaf(id), m1)), v1, m1)
         end
 
 (* <output> ::= "print" "(" <expression> ")" *)
