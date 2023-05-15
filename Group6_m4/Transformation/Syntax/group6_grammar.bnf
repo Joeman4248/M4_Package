@@ -36,7 +36,7 @@ prog
 <iteration> ::= "while" "(" <expression> ")" <block>
               | "for" "(" <assign> ";" <expression> ";" <assign> ")" <block> .
 
-(* Boolean Expressions *)
+(* Expressions *)
 
 <expression> ::= <disjunction> .
 
@@ -55,8 +55,6 @@ prog
                | <relational> "<=" <additive>
                | <relational> ">=" <additive>
                | <additive> .
-
-(* Integer Expressions *)
 
 <additive> ::= <additive> "+" <multiplicative>
              | <additive> "-" <multiplicative>
@@ -77,8 +75,8 @@ prog
 <absolute> ::= "abs" "(" <expression> ")"
              | <base> .
 
-<base> ::= id | boolean | integer
-         | "(" <expression> ")" | <increment> .
+<base> ::= "(" <expression> ")" | <increment>
+         | "true" | "false" | id  | integer .
 
 <increment> ::= id "++"
               | id "--"

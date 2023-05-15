@@ -1,0 +1,42 @@
+// declaration
+int i;
+int x;
+bool cond;
+
+// assignment
+i = 100;
+x = 2;
+cond = true;
+
+// conditional statments
+if (cond) {
+    i--;
+    cond = false;
+}
+print(i);
+
+if (cond) {
+    x++;
+}
+else {
+    x--;
+}
+print(x);
+
+// iteration
+for (i = 0; i <= 5; i++) {
+    print(i^2);
+}
+
+for (x = 2; x <= 2*10; x = x + 2) {
+    print(x);
+}
+
+i = 0;
+while (i > ~9) {print(--i);}
+
+print(1 + 2 + 3 + 4 + 5);
+
+print(abs(1 - 100));
+
+

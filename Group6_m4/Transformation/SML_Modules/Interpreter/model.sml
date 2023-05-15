@@ -105,7 +105,7 @@ fun typeToString(t) =
     else                  "ERROR"
 
 fun envToString(id, t, loc) =
-    "(" ^ typeToString(t) ^ ", " ^ Int.toString(loc) ^ ", ^ id ^ )\n"
+    "(" ^ typeToString(t) ^ ", " ^ Int.toString(loc) ^ ", "^ id ^" )\n"
 
 fun storeToString(loc, v) =
     "(" ^ Int.toString(loc) ^ ", " ^ dvToString(v) ^ ")\n"

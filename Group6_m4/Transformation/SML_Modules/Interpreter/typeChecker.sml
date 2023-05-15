@@ -348,8 +348,6 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
 
 (* <base> ::= id | boolean | integer
             | "(" <expression> ")" | <increment> *)
-  | typeOf( itree(inode("base",_), [ child ]), m ) = typeOf(child, m)
-
   | typeOf( itree(inode("base",_),
             [
                 itree(inode("(",_), [] ),
@@ -359,17 +357,22 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
         ), m
     ) = typeOf(expression, m)
 
+  | typeOf( itree(inode("base",_), [ itree(inode("true",_), [])  ]), m) = BOOL
+
+  | typeOf( itree(inode("base",_), [ itree(inode("false",_), []) ]), m) = BOOL
+
+  | typeOf( itree(inode("integer",_), [ _ ]), m) = INT
+
+  | typeOf( itree(inode("id",_), [ id ]), m ) = getType(accessEnv(getLeaf(id), m))
+
+  | typeOf( itree(inode("base",_), [ child ]), m ) = typeOf(child, m)
+
 (* <increment> ::= id "++"
                  | id "--"
                  | "++" id
                  | "--" id *)
-  | typeOf( itree(inode("increment",_),
-            [
-                id,
-                itree(inode("++",_), [] )
-            ]
-        ), m
-    ) = let
+  | typeOf( itree(inode("increment",_), [ id, itree(inode("++",_), [] ) ]), m) =
+        let
             val t1 = typeOf(id, m)
         in
             if t1 = INT then
@@ -378,13 +381,8 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
                 ERROR
         end
 
-  | typeOf( itree(inode("increment",_),
-            [
-                id,
-                itree(inode("--",_), [] )
-            ]
-        ), m
-    ) = let
+  | typeOf( itree(inode("increment",_), [ id, itree(inode("--",_), [] ) ]), m) =
+        let
             val t1 = typeOf(id, m)
         in
             if t1 = INT then
@@ -393,13 +391,8 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
                 ERROR
         end
 
-  | typeOf( itree(inode("increment",_),
-            [
-                itree(inode("++",_), [] ),
-                id
-            ]
-        ), m
-    ) = let
+  | typeOf( itree(inode("increment",_), [ itree(inode("++",_), [] ), id ]), m) =
+        let
             val t1 = typeOf(id, m)
         in
             if t1 = INT then
@@ -408,13 +401,8 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
                 ERROR
         end
 
-  | typeOf( itree(inode("increment",_),
-            [
-                itree(inode("--",_), [] ),
-                id
-            ]
-        ), m
-    ) = let
+  | typeOf( itree(inode("increment",_), [ itree(inode("--",_), [] ), id ]), m) =
+        let
             val t1 = typeOf(id, m)
         in
             if t1 = INT then
@@ -422,13 +410,6 @@ fun typeOf( itree(inode("expression",_), [ disjunction ]), m ) = typeOf(disjunct
             else
                 ERROR
         end
-
-(* id | boolean | integer *)
-  | typeOf( id as itree(inode("id",_), [ _ ]), m ) = getType(accessEnv(getLeaf(id), m))
-
-  | typeOf( itree(inode("boolean",_), [ _ ]), m) = BOOL
-
-  | typeOf( itree(inode("integer",_), [ _ ]), m) = INT
 
   | typeOf( itree(inode(x_root,_), children),_) = raise General.Fail("\n\nIn typeOf root = " ^ x_root ^ "\n\n")
   | typeOf _ = raise Fail("Error in Model.typeCheck - this should never occur")

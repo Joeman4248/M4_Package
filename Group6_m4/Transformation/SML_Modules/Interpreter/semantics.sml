@@ -381,7 +381,11 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
   | E( itree(inode("absolute",_), [ base ]), m ) = E(base, m)
 
 (* <base> ::= "(" <expression> ")" | <increment>
-            | id | boolean | integer *)
+            | id  | integer | "true" | "false" *)
+  | E( itree(inode("base",_), [ itree(inode("true",_), [])  ]), m) = (Boolean true,  m)
+
+  | E( itree(inode("base",_), [ itree(inode("false",_), []) ]), m) = (Boolean false, m)
+
   | E( itree(inode("base",_),
             [
                 itree(inode("(",_), []),
@@ -392,6 +396,21 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
     ) = E(expression, m)
 
   | E( itree(inode("base",_), [ child ]), m) = E(child, m)
+
+
+  | E( itree(inode("integer",_), [ integer ]), m) =
+        let
+            val value = valOf(Int.fromString(getLeaf(integer)))
+        in
+            (Integer value, m)
+        end
+
+  | E( itree(inode("id",_), [ id ]), m ) =
+        let
+            val value = accessStore(getLoc(accessEnv(getLeaf(id), m)), m)
+        in
+            (value, m)
+        end
 
 (* <increment> ::= id "++"
                  | id "--"
@@ -432,25 +451,6 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
             val v2 = Integer (dvToInt(v1) - 1)
         in
             (v2, updateStore(loc, v2, m))
-        end
-
-(* id | boolean | integer *)
-  | E( itree(inode("id",_), [ id ]), m ) =
-        let
-            val value = accessStore(getLoc(accessEnv(getLeaf(id), m)), m)
-        in
-            (value, m)
-        end
-
-  | E( itree(inode("boolean",_), [ itree(inode("true",_), [])  ]), m) = (Boolean true,  m)
-
-  | E( itree(inode("boolean",_), [ itree(inode("false",_), []) ]), m) = (Boolean false, m)
-
-  | E( itree(inode("integer",_), [ integer ]), m) =
-        let
-            val value = valOf(Int.fromString(getLeaf(integer)))
-        in
-            (Integer value, m)
         end
 
   | E( itree(inode(x_root,_), children),_) = raise General.Fail("\n\nIn M root = " ^ x_root ^ "\n\n")
