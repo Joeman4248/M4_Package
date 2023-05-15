@@ -305,7 +305,7 @@ typeOf([[ base ]], m0) = typeOf(base, m0)
 typeOf([[ increment ]], m0)      = typeOf(increment, m0)
 typeOf([[ ( expression ) ]], m0) = typeOf(expression, m0)
 
-typeOf([[ true ]], m0) = BOOL
+typeOf([[ true  ]], m0) = BOOL
 typeOf([[ false ]], m0) = BOOL
 
 typeOf([[ integer ]], m0) = INT
