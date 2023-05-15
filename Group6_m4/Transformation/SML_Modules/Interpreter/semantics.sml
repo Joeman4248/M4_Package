@@ -435,7 +435,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
         end
 
 (* id | boolean | integer *)
-  | E( id as itree(inode("id",_), [ _ ]), m ) =
+  | E( itree(inode("id",_), [ id ]), m ) =
         let
             val value = accessStore(getLoc(accessEnv(getLeaf(id), m)), m)
         in
@@ -446,7 +446,7 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
 
   | E( itree(inode("boolean",_), [ itree(inode("false",_), []) ]), m) = (Boolean false, m)
 
-  | E( integer as itree(inode("integer",_), [ _ ]), m) =
+  | E( itree(inode("integer",_), [ integer ]), m) =
         let
             val value = valOf(Int.fromString(getLeaf(integer)))
         in
