@@ -251,6 +251,9 @@ E'([[ increment ]], m0)      = E'(increment, m0)
 
 E'([[ ( expression ) ]], m0) = E'(expression, m0)
 
+E'([[ true  ]], m0) = (boolean, m0)
+E'([[ false ]], m0) = (boolean, m0)
+
 E'([[ id ]], m0) =
     let
         val loc = getLoc(accessEnv(id, m0))
@@ -258,9 +261,6 @@ E'([[ id ]], m0) =
     in
         (v1, m0)
     end
-
-E'([[ true  ]], m0) = (boolean, m0)
-E'([[ false ]], m0) = (boolean, m0)
 
 E'([[ integer ]], m0) = (integer, m0)
 

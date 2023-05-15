@@ -305,12 +305,12 @@ typeOf([[ base ]], m0) = typeOf(base, m0)
 typeOf([[ increment ]], m0)      = typeOf(increment, m0)
 typeOf([[ ( expression ) ]], m0) = typeOf(expression, m0)
 
-typeOf([[ id ]], m0) = getType(accessEnv(id, m0))
-
 typeOf([[ true ]], m0) = INT
 typeOf([[ false ]], m0) = INT
 
 typeOf([[ boolean ]], m0) = BOOL
+
+typeOf([[ id ]], m0) = getType(accessEnv(id, m0))
 
 typeOf([[ id ++ ]]) =
       let
