@@ -472,7 +472,6 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
         ), m
     ) = M( stmtList, M(stmt, m) )
 
-(* NOTE: unsure about this *)
 (* <stmt> ::= <declare> ";"
             | <assign> ";"
             | <initialize> ";"
