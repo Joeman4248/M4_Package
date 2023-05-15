@@ -643,7 +643,7 @@ fun M( itree( inode("prog",_), [ stmt_list ] ), m ) = M( stmt_list, m )
                         m1
                 end
         in
-            forLoopHelper(expression, block, assign2, m)
+            forLoopHelper(expression, block, assign2, m1)
         end
 
   | M( itree(inode(x_root,_), children),_) = raise General.Fail("\n\nIn M root = " ^ x_root ^ "\n\n")
