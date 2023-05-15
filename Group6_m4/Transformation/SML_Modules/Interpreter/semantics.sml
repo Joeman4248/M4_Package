@@ -120,12 +120,10 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
             ]
         ), m
     ) = let
-            val (v1, m1) = E(equality, m)
-            val (v2, m2) = E(relational, m1)
-            val term1 = dvToBool(v1)
-            val term2 = dvToBool(v2)
+            val (term1, m1) = E(equality, m)
+            val (term2, m2) = E(relational, m1)
         in
-            (Boolean (term1 <> term2), m2)
+            (Boolean (term1 = term2), m2)
         end
 
   | E( itree(inode("equality",_),
@@ -136,10 +134,8 @@ fun E( itree(inode("expression",_), [ disjunction ]), m ) = E(disjunction, m)
             ]
         ), m
     ) = let
-            val (v1, m1) = E(equality, m)
-            val (v2, m2) = E(relational, m1)
-            val term1 = dvToBool(v1)
-            val term2 = dvToBool(v2)
+            val (term1, m1) = E(equality, m)
+            val (term2, m2) = E(relational, m1)
         in
             (Boolean (term1 <> term2), m2)
         end

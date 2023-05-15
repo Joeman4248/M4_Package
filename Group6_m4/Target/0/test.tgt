@@ -5,19 +5,8 @@
     {
         int x;
         int i;
-        for (i = 1; i < 32; i++) {
-            x = i;
-            while (x != 1) {
-                int j;
-                for (j = 1; j < 3; j++){
-                        if (x % 2 == 0) {
-                            x = x / 2;
-                        }
-                        else {
-                            x = 3*x + 1;
-                        }
-                }
-                sum = sum + 3;
-            }
-        }
+        i = 0;
+        while (i <= 15) {
+            i = i + 1;
+        } 
     }
