@@ -65,12 +65,12 @@ fun accessStore( _, (_, _, []) ) = raise Fail("ERROR: uninitialized variable!")
 fun updateEnv( id1, t1, (env, loc, store) ) =
     let
         fun new_env([]) = [(id1, t1, loc)]  (* if new id is not found in current env,
-                                            * add it (along with the new type & location) *)
+                                             * add it (along with the new type & location) *)
             | new_env((id2, t2, loc2)::env2) =
                 if (id1 = id2) then
-                raise Fail("ERROR: " ^ id1 ^ " is already declared in this scope!")
+                    raise Fail("ERROR: " ^ id1 ^ " is already declared in this scope!")
                 else
-                (id2, t2, loc2)::new_env(env2)
+                    (id2, t2, loc2)::new_env(env2)
     in
         (new_env(env), loc + 1, store)
     end
@@ -81,11 +81,11 @@ fun updateEnv( id1, t1, (env, loc, store) ) =
 fun updateStore( loc1, v1, (env, loc, store) ) =
     let
         fun new_store([]) = [(loc1, v1)]    (* add new entry *)
-            | new_store((loc2, v2)::store) =
+          | new_store((loc2, v2)::store) =
                 if (loc1 = loc2) then
-                (loc1, v1)::store           (* replace existing entry *)
+                    (loc1, v1)::store       (* replace existing entry *)
                 else
-                (loc2, v2)::new_store(store)
+                    (loc2, v2)::new_store(store)
     in
         (env, loc, new_store(store))
     end
